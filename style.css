@@ -38,7 +38,7 @@ body {
     flex-direction: column;
 }
 
-.game-separator{
+.game-separator {
     display: flex;
 }
 
@@ -58,13 +58,24 @@ body {
     justify-content: space-around;
 }
 
-.game-centre{
+.game-centre {
     display: flex;
 }
 
-.path-vertical{
+.path-vertical-one, .path-vertical-two {
     height: 300px;
-    width: 150px;;
+    width: 150px;
+    ;
+    background-color: whitesmoke;
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(50px, 1fr));
+    grid-template-rows: repeat(auto-fill, minmax(50px, 1fr));
+}
+
+
+.path-horizontal-one, .path-horizontal-two {
+    height: 150px;
+    width: 300px;
     background-color: whitesmoke;
     display: grid;
     grid-template-columns: repeat(auto-fill, minmax(50px, 1fr));
@@ -81,15 +92,6 @@ body {
     border-top: 75px solid #D71313;
     border-bottom: 75px solid #FFF103;
     float: left;
-}
-
-.path-horizontal{
-    height: 150px;
-    width: 300px;
-    background-color: whitesmoke;
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(50px, 1fr));
-    grid-template-rows: repeat(auto-fill, minmax(50px, 1fr));
 }
 
 
@@ -216,7 +218,41 @@ body {
 /* PATH BLOCKS */
 .path-block {
     height: 50px;
-    width: 50px; 
+    width: 50px;
     box-sizing: border-box;
     border: 2px solid black;
+}
+
+
+/* horizontal path color */
+#h_id_1_1, #h_id_7_1, #h_id_8_1, #h_id_9_1, #h_id_10_1, #h_id_11_1 {
+    background-color: #1a42d5;
+}
+
+#h_id_16_2, #h_id_10_2, #h_id_9_2, #h_id_8_2, #h_id_7_2, #h_id_6_2 {
+    background-color: #00DFA2;
+}
+
+
+/* vertical path color */
+#v_id_12_2, #v_id_13_2, #v_id_10_2, #v_id_7_2, #v_id_4_2, #v_id_1_2 {
+    background-color: #FFF103;
+}
+
+#v_id_5_1, #v_id_4_1, #v_id_7_1, #v_id_10_1, #v_id_13_1, #v_id_16_1 {
+    background-color: #D71313;
+}
+
+
+/* black star background color */
+
+#v_id_14_2, #h_id_4_2, #v_id_3_1, #h_id_13_1 {
+    background-image: url('./assets/black-star.png');
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    background-size: 75%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
 }
