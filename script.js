@@ -11,14 +11,18 @@ const blockCount = 18;
 const pathBlockClass = "path-block";
 const idPrependHorizontal = "h_id_";
 const idPrependVertical = "v_id_";
-const iAppendOne = "_1";
-const iAppendTwo = "_2";
+const idAppendOne = "_1";
+const idAppendTwo = "_2";
+
+const pathIds = [];
 
 //creating horizontal path
 for (let ph of pathHorizontalOne) {
     for (let i = 0; i < blockCount; i++) {
         const div = document.createElement("div");
-        div.id = idPrependHorizontal + i + iAppendOne;
+        const id = idPrependHorizontal + i + idAppendOne;
+        div.id = id;
+        pathIds.push(id);
         div.className = pathBlockClass;
         ph.appendChild(div)
     }
@@ -27,7 +31,9 @@ for (let ph of pathHorizontalOne) {
 for (let ph of pathHorizontalTwo) {
     for (let i = 0; i < blockCount; i++) {
         const div = document.createElement("div");
-        div.id = idPrependHorizontal + i + iAppendTwo;
+        const id = idPrependHorizontal + i + idAppendTwo;
+        div.id = id;
+        pathIds.push(id);
         div.className = pathBlockClass;
         ph.appendChild(div)
     }
@@ -38,7 +44,9 @@ for (let ph of pathHorizontalTwo) {
 for (let pv of pathVerticalOne) {
     for (let i = 0; i < blockCount; i++) {
         const div = document.createElement("div");
-        div.id = idPrependVertical + i + iAppendOne;
+        const id = idPrependVertical + i + idAppendOne;;
+        div.id = id;
+        pathIds.push(id);
         div.className = pathBlockClass;
         pv.appendChild(div)
     }
@@ -47,16 +55,21 @@ for (let pv of pathVerticalOne) {
 for (let pv of pathVerticalTwo) {
     for (let i = 0; i < blockCount; i++) {
         const div = document.createElement("div");
-        div.id = idPrependVertical + i + iAppendTwo;
+        const id = idPrependVertical + i + idAppendTwo;
+        div.id = id;
+        pathIds.push(id);
         div.className = pathBlockClass;
         pv.appendChild(div)
     }
 }
 
-// Using the spread operator
-[...document.getElementsByClassName("path-block")].forEach(elem => {
-    elem.addEventListener("click", (event) => {
+// Add a click event listener to all elements with the class "path-block"
+document.querySelectorAll('.path-block').forEach(elem => {
+    elem.addEventListener('click', event => {
         alert(event.target.id);
     });
 });
+
+
+console.log("pathIds **** ", pathIds);
 
