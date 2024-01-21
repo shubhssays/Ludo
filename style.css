@@ -34,20 +34,12 @@ body {
     width: 750px;
     margin: 0;
     padding: 0;
+    display: flex;
+    flex-direction: column;
 }
 
-.game-top{
+.game-separator{
     display: flex;
-    
-}
-
-#board-blue {
-    height: 300px;
-    width: 300px;
-    background-color: #1a42d5;
-    display: flex;
-    justify-content: center;
-    align-items: center;
 }
 
 .white-area {
@@ -66,20 +58,47 @@ body {
     justify-content: space-around;
 }
 
+
+.game-centre{
+    display: flex;
+}
+
+.path-vertical{
+    height: 300px;
+    width: 150px;
+    background-color: rgb(227, 242, 237);
+}
+
+.home-color {
+    height: 150px;
+    width: 150px;
+    background: black;
+}
+
+.path-horizontal{
+    height: 150px;
+    width: 300px;
+    background-color: rgb(227, 242, 237);
+}
+
+
+/* BLUE  */
+
+
+#board-blue {
+    height: 300px;
+    width: 300px;
+    background-color: #1a42d5;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
 .blue-blocks {
     height: 50px;
     width: 50px;
     border-radius: 50%;
     border: 3px solid #1a42d5;
-}
-
-#board-red {
-    height: 300px;
-    width: 300px;
-    background-color: #D71313;
-    display: flex;
-    justify-content: center;
-    align-items: center;
 }
 
 .blue-coins {
@@ -91,6 +110,17 @@ body {
     display: flex;
     align-items: center;
     justify-content: center;
+}
+
+/* RED  */
+
+#board-red {
+    height: 300px;
+    width: 300px;
+    background-color: #D71313;
+    display: flex;
+    justify-content: center;
+    align-items: center;
 }
 
 .red-blocks {
@@ -111,8 +141,63 @@ body {
     justify-content: center;
 }
 
-.path-vertical{
+
+/* YELLOW  */
+
+#board-yellow {
     height: 300px;
-    width: 150px;
-    background-color: rgb(227, 242, 237);
+    width: 300px;
+    background-color: #FFF103;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.yellow-blocks {
+    height: 50px;
+    width: 50px;
+    border-radius: 50%;
+    border: 3px solid #FFF103;
+}
+
+.yellow-coins {
+    background-image: url('./assets/yellow-star.png');
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    background-size: 75%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+
+/* GREEN  */
+
+
+#board-green {
+    height: 300px;
+    width: 300px;
+    background-color: #00DFA2;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.green-blocks {
+    height: 50px;
+    width: 50px;
+    border-radius: 50%;
+    border: 3px solid #00DFA2;
+}
+
+.green-coins {
+    background-image: url('./assets/green-star.png');
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    background-size: 75%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
 }
