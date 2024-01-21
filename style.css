@@ -31,17 +31,51 @@ body {
     width: 750px;
     margin: 0;
     padding: 0;
-    display: grid;
-    overflow: hidden;
-    grid-template-columns: repeat(auto-fill, minmax(50px, 1fr));
-    grid-template-rows: repeat(auto-fill, minmax(50px, 1fr));
 }
 
-.blue, .red, .yellow, .green {
-    box-sizing: border-box;
+#board-blue {
+    height: 300px;
+    width: 300px;
+    background-color: #1a42d5;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.white-area {
+    background-color: white;
+    height: 235px;
+    width: 235px;
+    display: flex;
+    align-items: center;
+    justify-content: space-around;
+    flex-direction: column;
+}
+
+.block-holder {
+    width: 100%;
+    display: flex;
+    justify-content: space-around;
+}
+
+.blue-blocks {
     height: 50px;
     width: 50px;
+    border-radius: 50%;
+    border: 3px solid #1a42d5;
 }
+
+.blue-coins {
+    background-image: url('./assets/blue-star.png');
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    background-size: 75%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
 
 .blue {
     background-color: #1a42d5;
