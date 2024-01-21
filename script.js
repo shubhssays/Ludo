@@ -19,6 +19,9 @@ function init() {
     const rollForSeconds = 2;
     const rollIntervalLapse = 120;
 
+
+
+    isDiceRollingNow = false;
     const pathIds = [];
 
     //creating horizontal path
@@ -78,6 +81,10 @@ function init() {
 
     //Handling roll Dice Button click handler
     rollDiceButton.addEventListener("click", function (event) {
+        if (isDiceRollingNow) {
+            alert("dice is already rolling. Let it finish")
+        }
+        isDiceRollingNow = true;
         let number;
         let iteration = 0;
         const totalIteration = rollForSeconds * 1000;
@@ -89,6 +96,7 @@ function init() {
             if (iteration >= totalIteration) {
                 dice.classList.remove('dice-rolling');
                 clearInterval(interval);
+                isDiceRollingNow = false;
             }
         }, rollIntervalLapse);
     })
