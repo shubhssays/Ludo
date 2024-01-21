@@ -74,7 +74,13 @@ body {
 .home-color {
     height: 150px;
     width: 150px;
-    background: black;
+    border: 1px solid black;
+    box-sizing: border-box;
+    border-left: 75px solid #1a42d5;
+    border-right: 75px solid #00DFA2;
+    border-top: 75px solid #D71313;
+    border-bottom: 75px solid #FFF103;
+    float: left;
 }
 
 .path-horizontal{
