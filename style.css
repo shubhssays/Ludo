@@ -280,17 +280,15 @@ body {
     background-position: center;
     background-repeat: no-repeat;
     background-size: 75%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
+    transform-style: preserve-3d;
 }
 
 @keyframes rollAnimationKeyframes {
     0% {
-        transform: rotate(0deg);
+        transform: rotateX(0deg) rotateY(0deg);
     }
     100% {
-        transform: rotate(360deg);
+        transform: rotateX(360deg) rotateY(360deg);
     }
 }
 
