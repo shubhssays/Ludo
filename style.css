@@ -1,3 +1,64 @@
-h1{
-    color: brown;
+body {
+    margin: 0;
+    padding: 0;
+    height: 100vh;
+    display: flex;
+    align-items: center;
+}
+
+.sidebar {
+    height: inherit;
+    background-color: #EEF5FF;
+    width: 250px;
+}
+
+.main {
+    height: inherit;
+    width: calc(100% - 250px);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.game-board-box {
+    height: 754px;
+    width: 754px;
+    border: 4px solid #3D3B40;
+}
+
+#game-board {
+    height: 750px;
+    width: 750px;
+    margin: 0;
+    padding: 0;
+    display: grid;
+    overflow: hidden;
+    grid-template-columns: repeat(auto-fill, minmax(50px, 1fr));
+    grid-template-rows: repeat(auto-fill, minmax(50px, 1fr));
+}
+
+.blue, .red, .yellow, .green {
+    box-sizing: border-box;
+    height: 50px;
+    width: 50px;
+}
+
+.blue {
+    background-color: #1a42d5;
+}
+
+.inner-border-top, .inner-border-bottom, .inner-border-left, .inner-border-right {
+    border-top: 1px solid #000000;
+}
+
+.inner-border-bottom {
+    border-bottom: 1px solid #000000;
+}
+
+.inner-border-left {
+    border-left: 1px solid #000000;
+}
+
+.inner-border-right {
+    border-right: px solid #000000;
 }
