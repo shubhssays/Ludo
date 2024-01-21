@@ -58,7 +58,6 @@ body {
     justify-content: space-around;
 }
 
-
 .game-centre{
     display: flex;
 }
@@ -67,6 +66,9 @@ body {
     height: 300px;
     width: 150px;;
     background-color: whitesmoke;
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(50px, 1fr));
+    grid-template-rows: repeat(auto-fill, minmax(50px, 1fr));
 }
 
 .home-color {
@@ -79,6 +81,9 @@ body {
     height: 150px;
     width: 300px;
     background-color: whitesmoke;
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(50px, 1fr));
+    grid-template-rows: repeat(auto-fill, minmax(50px, 1fr));
 }
 
 
@@ -200,4 +205,12 @@ body {
     display: flex;
     align-items: center;
     justify-content: center;
+}
+
+/* PATH BLOCKS */
+.path-block {
+    height: 50px;
+    width: 50px; 
+    box-sizing: border-box;
+    border: 1px solid black;
 }
