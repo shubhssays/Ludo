@@ -208,6 +208,11 @@ function handleDiceRoll(dice) {
 
 //handle player chance
 function handlerPlayerChance() {
+    const allCoinRotate = document.querySelectorAll(".coin-rotate");
+    allCoinRotate.forEach(coinRotate => {
+        coinRotate.classList.remove('coin-rotate');
+    });
+
     const player = currentPlayer;
     const color = currentPlayer.color;
     const score = parseInt(player.score);
@@ -272,7 +277,7 @@ restartGameButton.addEventListener("click", function (event) {
 
 //Handling game basic start configuration
 function startGame() {
-    instructionText.innerText = "Configure player name and their color...";
+    // instructionText.innerText = "Configure player name and their color...";
     changeGameStatus(gameStatus.CONFIGURING);
     openInitModal();
 }
