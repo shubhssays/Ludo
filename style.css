@@ -306,8 +306,16 @@ body {
     }
 }
 
+#roll-dice{
+    margin-right: 20px;
+}
+
 .dice-rolling {
     animation: rollAnimationKeyframes 2s infinite linear;
+}
+
+#dice-holder {
+    display: none;
 }
 
 .button {

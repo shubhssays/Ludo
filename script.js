@@ -17,6 +17,7 @@ const playerOneInput = document.getElementById("player-one");
 const playerTwoInput = document.getElementById("player-two");
 const playerThreeInput = document.getElementById("player-three");
 const playerFourInput = document.getElementById("player-four");
+const diceHolder = document.getElementById("dice-holder");
 
 // game constants
 const gameStatus = {
@@ -69,6 +70,8 @@ const defaultInstruction = "Game has not started yet. Click on Start Game Button
 instructionText.innerText = defaultInstruction;
 let players = [];
 let currentPlayer;
+let currentChance;
+let currentPlayerDiceScore = [];
 
 //function to update game current status
 function changeGameStatus(status) {
@@ -179,7 +182,7 @@ rollDiceButton.addEventListener("click", function (event) {
     dice.classList.add('dice-rolling');
     let interval = setInterval(function () {
         number = Math.floor(Math.random() * 6) + 1;
-        dice.style.backgroundImage = `url('./assets/dice-${number}.png')`;
+        dice.style.backgroundImage = `url('./assets/dice-${number}-${currentPlayer.color}.png')`;
         iteration = iteration + rollIntervalLapse;
         if (iteration >= totalIteration) {
             dice.classList.remove('dice-rolling');
@@ -213,7 +216,6 @@ function startGame() {
     changeGameStatus(gameStatus.CONFIGURING);
     openInitModal();
 }
-
 
 // Function to open the modal
 function openInitModal() {
@@ -287,7 +289,7 @@ function handleColorSelection(clickedCheckbox) {
     lastSelectedColorCheckBox = clickedCheckbox;
 }
 
-
+//function to get count of selected players colors
 function getSelectedCheckboxColors() {
     let numOfSelectedCheckbox = 0;
     const allCheckbox = document.querySelectorAll('.cbp');
@@ -299,9 +301,10 @@ function getSelectedCheckboxColors() {
     return numOfSelectedCheckbox;
 }
 
+//function to update instruction
 function setInstruction() {
     const playerTurn = currentPlayer.inputPlayerName + "(" + currentPlayer.color + ")";
-    instructionText.innerText = "It's " + playerTurn + "chance to roll dice now";
+    instructionText.innerText = "It's " + playerTurn + " chance to roll dice now";
     instructionText.style.backgroundColor = colorMapper[currentPlayer.color].backgroundColor;
     instructionText.style.color = colorMapper[currentPlayer.color].color;
 }
@@ -309,11 +312,12 @@ function setInstruction() {
 
 //Begin Game
 function beginGame() {
+    diceHolder.style.display = "block";
     players = validateAndSaveConfiguration();
     changeGameStatus(gameStatus.RUNNING);
     closeInitModal();
     currentPlayer = players[0];
-    console.log(currentPlayer)
+    currentChance = currentPlayer.color;
     setInstruction();
 }
 
@@ -331,7 +335,7 @@ function validateAndSaveConfiguration() {
     const selectedPlayers = [];
 
     const allCheckbox = document.querySelectorAll('.cbp');
-    allCheckbox.forEach(checkbox => {
+    allCheckbox.forEach((checkbox, index) => {
         if (checkbox.checked) {
             const parent = checkbox.parentNode;
             let input;
@@ -356,6 +360,7 @@ function validateAndSaveConfiguration() {
                     inputId,
                     inputPlayerName,
                     color,
+                    chance: index == 0 ? true : false,
                 }
                 selectedPlayers.push(playerObj);
             }
@@ -390,10 +395,12 @@ function fixError() {
     location.reload();
 }
 
-
 function getPlayerAlternateName(inputId) {
     const playerNumber = inputId.split("-")[1].trim();
     const playerName = defaultPlayerPrepend + " " + numberMapper[playerNumber];
     return playerName;
 }
+
+
+
 // document.addEventListener('DOMContentLoaded', init);
