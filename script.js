@@ -28,13 +28,24 @@ const gameStatus = {
     RUNNING: "running",
     WINNER_DECLARED: "winner_declared",
 }
-
+const playerActions = {
+    ROLL: "roll",
+    MOVE: "move"
+}
 const defaultPlayerPrepend = "Player";
 const numberMapper = {
     one: 1,
     two: 2,
     three: 3,
     four: 4,
+}
+const diceVal = {
+    one: 1,
+    two: 2,
+    three: 3,
+    four: 4,
+    five: 5,
+    six: 6,
 }
 const colorMapper = {
     blue: {
@@ -189,19 +200,59 @@ function handleDiceRoll(dice) {
             dice.disabled = false;
             dice.classList.remove(disabledClass);
             isDiceRollingNow = false;
+            currentPlayer.score = parseInt(score);
+            handlerPlayerChance();
         }
     }, rollIntervalLapse);
-    currentPlayer.score = parseInt(score);
 }
 
 //handle player chance
-function handlerPlayerChance(currentPlayer) {
-    
+function handlerPlayerChance() {
+    const player = currentPlayer;
+    const color = currentPlayer.color;
+    const score = parseInt(player.score);
+    const coins = `${color}-coins`;
+
+    let action;
 
     //no coin is out
-    if (currentPlayer.coin_out.length < 1) {
+    if (player.coin_out.length < 1) {
+        //checking if score is 6 then, highlight the coins
+        if (score == diceVal.six) {
+            const allCoins = document.querySelectorAll(`.${coins}`);
+            allCoins.forEach(eachCoin => {
+                eachCoin.classList.add('coin-rotate');
+            });
+            action = playerActions.MOVE;
+        }
+    }
+
+
+    //checking if action is empty, transfer the chance to next player in players array
+
+    if (!action) {
+        nextPlayerTurn()
+    }
+}
+
+//function to change currentPlayer chance
+function nextPlayerTurn() {
+    console.log("nextPlayerTurn called")
+    console.log("currentPlayer before *** ", currentPlayer);
+    const playersLength = players.length;
+    const currentPlayerIndex = players.findIndex(player => player.inputId == currentPlayer.inputId);
+    if (currentPlayerIndex == -1) {
+        fixError()
         return;
     }
+    console.log("currentPlayerIndex *** ", currentPlayerIndex);
+
+    if (currentPlayerIndex < playersLength - 1) {
+        currentPlayer = players[currentPlayerIndex + 1];
+    } else {
+        currentPlayer = players[0];
+    }
+    setBlink();
 }
 
 //Handling start game Button click handler
@@ -434,40 +485,34 @@ function getPlayerAlternateName(inputId) {
 
 // blink color board by based on player's turn
 function setBlink() {
+    console.log("currentPlayer ******* ", currentPlayer)
     blueBoard.classList.remove("blink-blue");
     redBoard.classList.remove("blink-red");
     greenBoard.classList.remove("blink-green");
     yellowBoard.classList.remove("blink-yellow");
 
-    const allFingerArrow = document.querySelectorAll('.cbp');
+    const allFingerArrow = document.querySelectorAll('.finger');
     allFingerArrow.forEach(fingerArrow => {
         fingerArrow.classList.add('hide')
     });
 
     const allDiceBox = document.querySelectorAll('.dbb');
     allDiceBox.forEach(diceBox => {
-        diceBox.classList.add('dice-box-blank');
-        diceBox.classList.remove("dice-box-blue", "dice-box-red", "dice-box-green", "dice-box-yellow");
+        diceBox.classList = 'dbb dice-box-blank';
+        diceBox.style.backgroundImage = "";
     });
 
 
     const currentBoard = document.getElementById(`board-${currentPlayer.color}`)
     const currentBlinking = `blink-${currentPlayer.color}`;
-    console.log("currentPlayer ******* ", currentPlayer)
-    console.log("currentBlinking ******* ", currentBlinking)
-    console.log("currentBoard ******* ", currentBoard)
     currentBoard.classList.add(currentBlinking);
     const diceOd = document.getElementById(`od-${currentPlayer.color}`);
-    console.log("diceOd ******* ", diceOd)
     const fingerArrow = diceOd.querySelector(".finger");
-    console.log("fingerArrow ******* ", fingerArrow)
-
     if (fingerArrow) {
         fingerArrow.classList.remove('hide');
     }
 
     const diceBoxBlank = diceOd.querySelector(".dbb");
-    console.log("diceBoxBlank ******* ", diceBoxBlank)
     if (diceBoxBlank) {
         diceBoxBlank.classList.remove('dice-box-blank');
         diceBoxBlank.classList.add(`dice-box-${currentPlayer.color}`);

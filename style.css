@@ -326,6 +326,23 @@ body {
     justify-content: center;
 }
 
+.coin-rotate {
+    background-size: 75%;
+    border-radius: 50%;
+    border: 2px dashed black; /* Dotted border */
+    position: relative;
+    animation: rotate 2s linear infinite; /* Rotation animation */
+}
+
+/* Keyframes for the rotation animation */
+@keyframes rotate {
+    from {
+        transform: rotate(0deg);
+    }
+    to {
+        transform: rotate(360deg);
+    }
+}
 
 /* GREEN  */
 
