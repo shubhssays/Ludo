@@ -235,12 +235,12 @@ function handlerPlayerChance() {
 
 
     //checking if action is empty, transfer the chance to next player in players array
-
-    setTimeout(function(){
-        if (!action) {
+    if (!action) {
+        setTimeout(function () {
             nextPlayerTurn()
-        }
-    },secondsToWaitForAnotherChance * 1000)
+        }, secondsToWaitForAnotherChance * 1000)
+    }
+
 }
 
 //function to change currentPlayer chance
