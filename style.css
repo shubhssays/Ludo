@@ -28,9 +28,11 @@ body {
     width: calc(100% - 250px);
     display: flex;
     flex-direction: column;
-    justify-content: space-around;
+    /* justify-content: space-around; */
     align-items: center;
     overflow: hidden;
+    margin: 0;
+    padding: 0;
 }
 
 .game-board-box {
@@ -40,6 +42,8 @@ body {
     display: flex;
     justify-content: center;
     align-items: center;
+    margin: 0;
+    padding: 0;
 }
 
 #game-board {
@@ -105,6 +109,131 @@ body {
     border-top: 75px solid #D71313;
     border-bottom: 75px solid #FFF103;
     float: left;
+}
+
+
+/* Dice Holder */
+.dice-holder {
+    width: 758px;
+    display: flex;
+    justify-content: space-between;
+}
+
+.outer-dice {
+    height: 100px;
+    width: 220px;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.dice-box {
+    height: 80%;
+    width: 80%;
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+    border-radius: 10px;
+    /* box-shadow: rgba(50, 50, 93, 0.25) 0px 30px 60px -12px inset, rgba(0, 0, 0, 0.3) 0px 18px 36px -18px inset; */
+}
+
+.dbb {
+    cursor: pointer;
+}
+
+.dice-box-red {
+    height: 60px;
+    width: 60px;
+    background-image: url('./assets/dice-1-red.png');
+    background-size: cover;
+}
+
+.dice-box-blue {
+    height: 60px;
+    width: 60px;
+    background-image: url('./assets/dice-1-blue.png');
+    background-size: cover;
+}
+
+.dice-box-yellow {
+    height: 60px;
+    width: 60px;
+    background-image: url('./assets/dice-1-yellow.png');
+    background-size: cover;
+}
+
+.dice-box-green {
+    height: 60px;
+    width: 60px;
+    background-image: url('./assets/dice-1-green.png');
+    background-size: cover;
+}
+
+
+.dice-box-blank {
+    height: 60px;
+    width: 60px;
+    border: 1px solid #333;
+}
+
+.color-star-red {
+    height: 40px;
+    width: 40px;
+    background-image: url('./assets/red-star.png');
+    background-size: cover;
+}
+
+.color-star-blue {
+    height: 40px;
+    width: 40px;
+    background-image: url('./assets/blue-star.png');
+    background-size: cover;
+}
+
+
+.color-star-green {
+    height: 40px;
+    width: 40px;
+    background-image: url('./assets/green-star.png');
+    background-size: cover;
+}
+
+
+.color-star-yellow {
+    height: 40px;
+    width: 40px;
+    background-image: url('./assets/yellow-star.png');
+    background-size: cover;
+}
+
+.finger-left {
+    width: 80px;
+    height: 80px;
+    background-image: url('./assets/finger-left.png');
+    background-size: cover;
+    animation: vibrateAnimation 0.2s ease-in-out infinite alternate;
+    background-position: center;
+    background-repeat: no-repeat;
+    background-size: 75%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.finger-right {
+    width: 80px;
+    height: 80px;
+    background-image: url('./assets/finger-right.png');
+    background-size: cover;
+    animation: vibrateAnimation 0.2s ease-in-out infinite alternate;
+    background-position: center;
+    background-repeat: no-repeat;
+    background-size: 75%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
 }
 
 
@@ -356,7 +485,7 @@ body {
     height: fit-content;
     padding: 5px;
     background-color: bisque;
-    animation: vibrateAnimation 0.1s ease-in-out infinite alternate;
+    animation: vibrateAnimation 0.2s ease-in-out infinite alternate;
 }
 
 @keyframes vibrateAnimation {
@@ -365,8 +494,7 @@ body {
     }
 
     100% {
-        transform: translateX(5px);
-        /* Adjust the distance you want to vibrate */
+        transform: translateX(20px);
     }
 }
 
@@ -384,7 +512,7 @@ body {
     align-items: center;
 }
 
-/* Style for the modal content */
+
 .modal-content {
     background-color: #fff;
     padding: 20px;
@@ -614,4 +742,8 @@ input {
 
 .blink-yellow {
     animation: blink-y 0.5s infinite;
+}
+
+.hide {
+    display: none;
 }

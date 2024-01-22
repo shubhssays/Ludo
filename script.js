@@ -131,7 +131,6 @@ for (let ph of pathHorizontalTwo) {
     }
 }
 
-
 //creating vertical path
 for (let pv of pathVerticalOne) {
     for (let i = 0; i < blockCount; i++) {
@@ -314,13 +313,26 @@ function setInstruction() {
 
 //Begin Game
 function beginGame() {
+    if (currentGameStatus == gameStatus.RUNNING) {
+        return;
+    }
+    // Add a click event listener to all elements with the class "path-block"
+    document.querySelectorAll('.dbb').forEach(elem => {
+        elem.addEventListener('click', event => {
+            console.log("current clicked dice ****** ", event.target);
+        });
+    });
+
     diceHolder.style.display = "block";
     players = validateAndSaveConfiguration();
+    if (!players || players.length < 1) {
+        return;
+    }
     changeGameStatus(gameStatus.RUNNING);
     closeInitModal();
     currentPlayer = players[0];
     currentChance = currentPlayer.color;
-    setInstruction();
+    // setInstruction();
     setBlink();
 }
 
@@ -329,10 +341,11 @@ function beginGame() {
 function validateAndSaveConfiguration() {
     let numOfSelectedCheckbox = getSelectedCheckboxColors();
     let errorFound = false;
+
     //validating player configuration
     if (numOfPlayers != numOfSelectedCheckbox) {
-        errorFound = true;
-        fixError();
+        alert("Seems like you've not selected colored checkbox properly. Please select colored box or reset if you're not sure.")
+        return;
     }
 
     const selectedPlayers = [];
@@ -392,27 +405,63 @@ function validateAndSaveConfiguration() {
     return selectedPlayers;
 }
 
+// Function to show error and reset everything
 function fixError() {
     alert("Seems like there is some issue with player configuration. Thus, restarting game");
     localStorage.clear();
     location.reload();
 }
 
+// generate default player name
 function getPlayerAlternateName(inputId) {
     const playerNumber = inputId.split("-")[1].trim();
     const playerName = defaultPlayerPrepend + " " + numberMapper[playerNumber];
     return playerName;
 }
 
-
+// blink color board by based on player's turn
 function setBlink() {
-    blueBoard.classList.remove("blinking");
-    redBoard.classList.remove("blinking");
-    greenBoard.classList.remove("blinking");
-    yellowBoard.classList.remove("blinking");
+    blueBoard.classList.remove("blink-blue");
+    redBoard.classList.remove("blink-red");
+    greenBoard.classList.remove("blink-green");
+    yellowBoard.classList.remove("blink-yellow");
 
-    `${currentPlayer.color}Board`.classList.add("blinking");
+    const allFingerArrow = document.querySelectorAll('.cbp');
+    allFingerArrow.forEach(fingerArrow => {
+        fingerArrow.classList.add('hide')
+    });
+
+    const allDiceBox = document.querySelectorAll('.dbb');
+    allDiceBox.forEach(diceBox => {
+        diceBox.classList.add('dice-box-blank');
+        diceBox.classList.remove("dice-box-blue", "dice-box-red", "dice-box-green", "dice-box-yellow");
+    });
+
+
+    const currentBoard = document.getElementById(`board-${currentPlayer.color}`)
+    const currentBlinking = `blink-${currentPlayer.color}`;
+    console.log("currentPlayer ******* ", currentPlayer)
+    console.log("currentBlinking ******* ", currentBlinking)
+    console.log("currentBoard ******* ", currentBoard)
+    currentBoard.classList.add(currentBlinking);
+    const diceOd = document.getElementById(`od-${currentPlayer.color}`);
+    console.log("diceOd ******* ", diceOd)
+    const fingerArrow = diceOd.querySelector(".finger");
+    console.log("fingerArrow ******* ", fingerArrow)
+
+    if (fingerArrow) {
+        fingerArrow.classList.remove('hide');
+    }
+
+    const diceBoxBlank = diceOd.querySelector(".dbb");
+    console.log("diceBoxBlank ******* ", diceBoxBlank)
+    if (diceBoxBlank) {
+        diceBoxBlank.classList.remove('dice-box-blank');
+        diceBoxBlank.classList.add(`dice-box-${currentPlayer.color}`);
+    }
 }
+
+
 
 
 // document.addEventListener('DOMContentLoaded', init);
