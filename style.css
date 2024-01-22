@@ -306,7 +306,7 @@ body {
     }
 }
 
-#roll-dice{
+#roll-dice {
     margin-right: 20px;
 }
 
@@ -538,4 +538,80 @@ input {
 
 .cb-yellow {
     accent-color: #FFF103;
+}
+
+@keyframes blink-b {
+    0% {
+        background-color: #1a42d5;
+    }
+
+    50% {
+        background-color: #1130a2;
+    }
+
+    100% {
+        background-color: #1a42d5;
+    }
+}
+
+.blink-blue {
+    animation: blink-b 0.5s infinite;
+}
+
+
+@keyframes blink-r {
+    0% {
+        background-color: #D71313;
+    }
+
+    50% {
+        background-color: #a80c0c;
+    }
+
+    100% {
+        background-color: #D71313;
+    }
+}
+
+.blink-red {
+    animation: blink-r 0.5s infinite;
+}
+
+
+@keyframes blink-g {
+    0% {
+        background-color: #00DFA2;
+    }
+
+    50% {
+        background-color: #099872;
+    }
+
+    100% {
+        background-color: #00DFA2;
+    }
+}
+
+.blink-green {
+    animation: blink-g 0.5s infinite;
+}
+
+
+
+@keyframes blink-y {
+    0% {
+        background-color: #FFF103;
+    }
+
+    50% {
+        background-color: #d6cd18;
+    }
+
+    100% {
+        background-color: #FFF103;
+    }
+}
+
+.blink-yellow {
+    animation: blink-y 0.5s infinite;
 }

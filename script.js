@@ -1,6 +1,9 @@
 //html constants
 const gameBoard = document.getElementById("game-board");
 const blueBoard = document.getElementById("board-blue");
+const redBoard = document.getElementById("board-red");
+const greenBoard = document.getElementById("board-green");
+const yellowBoard = document.getElementById("board-yellow");
 const pathHorizontalOne = document.getElementsByClassName("path-horizontal-one");
 const pathHorizontalTwo = document.getElementsByClassName("path-horizontal-two");
 const pathVerticalOne = document.getElementsByClassName("path-vertical-one");
@@ -309,7 +312,6 @@ function setInstruction() {
     instructionText.style.color = colorMapper[currentPlayer.color].color;
 }
 
-
 //Begin Game
 function beginGame() {
     diceHolder.style.display = "block";
@@ -319,6 +321,7 @@ function beginGame() {
     currentPlayer = players[0];
     currentChance = currentPlayer.color;
     setInstruction();
+    setBlink();
 }
 
 
@@ -401,6 +404,15 @@ function getPlayerAlternateName(inputId) {
     return playerName;
 }
 
+
+function setBlink() {
+    blueBoard.classList.remove("blinking");
+    redBoard.classList.remove("blinking");
+    greenBoard.classList.remove("blinking");
+    yellowBoard.classList.remove("blinking");
+
+    `${currentPlayer.color}Board`.classList.add("blinking");
+}
 
 
 // document.addEventListener('DOMContentLoaded', init);
