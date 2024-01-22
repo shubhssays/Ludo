@@ -1,4 +1,5 @@
 function init() {
+
     //html constants
     const gameBoard = document.getElementById("game-board");
     const blueBoard = document.getElementById("board-blue");
@@ -8,8 +9,17 @@ function init() {
     const pathVerticalTwo = document.getElementsByClassName("path-vertical-two");
     const rollDiceButton = document.getElementById("roll-dice");
     const dice = document.getElementById("dice");
+    const startGameButton = document.getElementById("start-game");
+    const restartGameButton = document.getElementById("restart-game");
+    const instructionText = document.getElementById("instruction");
 
     // game constants
+    const gameStatus = {
+        NOT_STARTED: "not_started",
+        RUNNING: "running",
+        WINNER_DECLARED: "winner_declared",
+    }
+    const gameRestartCommand = "restart_game";
     const blockCount = 18;
     const pathBlockClass = "path-block";
     const idPrependHorizontal = "h_id_";
@@ -18,11 +28,51 @@ function init() {
     const idAppendTwo = "_2";
     const rollForSeconds = 2;
     const rollIntervalLapse = 120;
-
-
-
+    const disabledClass = "disabled";
+    let currentGameStatus = gameStatus.NOT_STARTED;
     isDiceRollingNow = false;
     const pathIds = [];
+    const defaultInstruction = "Game has not started yet. Click on Start Game Button";
+    instructionText.innerText = defaultInstruction;
+    const players = {
+        BLUE: {
+            name: "Player 1"
+        },
+        RED: {
+            name: "Player 2"
+        },
+        GREEN: {
+            name: "Player 3"
+        },
+        YELLOW: {
+            name: "Player 4"
+        },
+    }
+
+    //function to update game current status
+    function changeGameStatus(status) {
+        currentGameStatus = status;
+        switch (currentGameStatus) {
+            case gameStatus.NOT_STARTED:
+                startGameButton.classList.remove(disabledClass);
+                startGameButton.style.display = "block";
+                restartGameButton.style.display = "none";
+                break;
+
+            case gameStatus.RUNNING:
+                startGameButton.innerText = "Game's running";
+                restartGameButton.style.display = "block";
+                startGameButton.classList.add(disabledClass);
+                break;
+
+            case gameStatus.WINNER_DECLARED:
+                startGameButton.classList.remove(disabledClass);
+                startGameButton.style.display = "none";
+                break;
+        }
+    }
+
+    changeGameStatus(currentGameStatus)
 
     //creating horizontal path
     for (let ph of pathHorizontalOne) {
@@ -71,6 +121,13 @@ function init() {
         }
     }
 
+    //checking for game restart command
+    const restartStatus = localStorage.getItem(gameRestartCommand);
+    if (restartStatus != null && restartStatus) {
+        localStorage.removeItem(gameRestartCommand);
+        startGame();
+    }
+
     // Add a click event listener to all elements with the class "path-block"
     document.querySelectorAll('.path-block').forEach(elem => {
         elem.addEventListener('click', event => {
@@ -81,6 +138,9 @@ function init() {
 
     //Handling roll Dice Button click handler
     rollDiceButton.addEventListener("click", function (event) {
+        rollDiceButton.innerText = "Rolling...";
+        rollDiceButton.classList.add(disabledClass);
+        rollDiceButton.disabled = true;
         if (isDiceRollingNow) {
             alert("dice is already rolling. Let it finish")
         }
@@ -96,10 +156,33 @@ function init() {
             if (iteration >= totalIteration) {
                 dice.classList.remove('dice-rolling');
                 clearInterval(interval);
+                rollDiceButton.innerText = "Roll Dice";
                 isDiceRollingNow = false;
+                rollDiceButton.classList.remove(disabledClass);
+                rollDiceButton.disabled = false;
             }
         }, rollIntervalLapse);
     })
+
+    //Handling start game Button click handler
+    startGameButton.addEventListener("click", function (event) {
+        startGame();
+    })
+
+    //Handling restart game Button click handler
+    restartGameButton.addEventListener("click", function (event) {
+        if (currentGameStatus != gameStatus.NOT_STARTED) {
+            localStorage.setItem(gameRestartCommand, true);
+            location.reload();
+        } else {
+            alert("Invalid action. Game cannot be restarted now")
+        }
+    })
+
+    function startGame() {
+        instructionText.innerText = "Game started";
+        changeGameStatus(gameStatus.RUNNING);
+    }
 }
 
 document.addEventListener('DOMContentLoaded', init);

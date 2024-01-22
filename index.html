@@ -10,6 +10,15 @@
 
 <body>
     <div class="sidebar">
+        <div class="button-holder">
+            <button id="start-game" >
+                Start Game
+            </button>
+            <button id="restart-game" >
+                Restart Game
+            </button>
+        </div>
+       
     </div>
     <div class="main">
         <div class="game-board-box">
@@ -122,11 +131,13 @@
         </div>
 
         <div class="playground">
+            <p id="instruction" class="vibrate-effect">Yellow Turns</p>
             <div id="dice"></div>
-            <button id="roll-dice">Roll dice</button>
+            <button id="roll-dice" class="">Roll dice</button>
         </div>
     </div>
 
+    <script src="alert.js"></script>
     <script src="script.js"></script>
 </body>
 
