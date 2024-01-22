@@ -13,12 +13,25 @@ const instructionText = document.getElementById("instruction");
 const initModal = document.getElementById("init-modal");
 const closeInitModelButton = document.getElementById("close-init-modal");
 const confirmInitModelButton = document.getElementById("confirm-init-modal");
+const playerOneInput = document.getElementById("player-one");
+const playerTwoInput = document.getElementById("player-two");
+const playerThreeInput = document.getElementById("player-three");
+const playerFourInput = document.getElementById("player-four");
 
 // game constants
 const gameStatus = {
     NOT_STARTED: "not_started",
+    CONFIGURING: "configuring_game",
     RUNNING: "running",
     WINNER_DECLARED: "winner_declared",
+}
+
+const defaultPlayerPrepend = "Player";
+const numberMapper = {
+    one: 1,
+    two: 2,
+    three: 3,
+    four: 4,
 }
 const gameRestartCommand = "restart_game";
 const blockCount = 18;
@@ -36,33 +49,27 @@ isDiceRollingNow = false;
 const pathIds = [];
 const defaultInstruction = "Game has not started yet. Click on Start Game Button";
 instructionText.innerText = defaultInstruction;
-const players = {
-    BLUE: {
-        name: "Player 1"
-    },
-    RED: {
-        name: "Player 2"
-    },
-    GREEN: {
-        name: "Player 3"
-    },
-    YELLOW: {
-        name: "Player 4"
-    },
-}
+let players = []
 
 //function to update game current status
 function changeGameStatus(status) {
     currentGameStatus = status;
     switch (currentGameStatus) {
         case gameStatus.NOT_STARTED:
+            startGameButton.innerText = "Start Game";
             startGameButton.classList.remove(disabledClass);
             startGameButton.style.display = "block";
             restartGameButton.style.display = "none";
             break;
 
+        case gameStatus.CONFIGURING:
+            startGameButton.innerText = "Configuring Game...";
+            restartGameButton.style.display = "block";
+            startGameButton.classList.add(disabledClass);
+            break;
+
         case gameStatus.RUNNING:
-            startGameButton.innerText = "Game's running";
+            startGameButton.innerText = "Game's running...";
             restartGameButton.style.display = "block";
             startGameButton.classList.add(disabledClass);
             break;
@@ -181,30 +188,36 @@ restartGameButton.addEventListener("click", function (event) {
     }
 })
 
+//Handling game basic start configuration
 function startGame() {
-    instructionText.innerText = "Game started";
-    changeGameStatus(gameStatus.RUNNING);
+    instructionText.innerText = "Configure player name and their color...";
+    changeGameStatus(gameStatus.CONFIGURING);
+    openInitModal();
 }
 
 
-//init modal handling
-
 // Function to open the modal
-function openModal(modal) {
-    modal.style.display = "flex";
+function openInitModal() {
+    initModal.style.display = "flex";
 }
 
 // Function to close the modal
-function closeModal(modal) {
-    modal.style.display = "none";
+function closeInitModal() {
+    initModal.style.display = "none";
+    if (currentGameStatus == gameStatus.CONFIGURING) {
+        location.reload();
+    }
 }
 
 // function to close init modal
 closeInitModelButton.addEventListener("click", function () {
-    closeModal(initModal);
+    closeInitModal();
 });
 
-openModal(initModal)
+// function to begin game after player configuration 
+confirmInitModelButton.addEventListener("click", function () {
+    beginGame();
+});
 
 //function to handle number of selected players
 function handleSelectedPlayers(clickedButton) {
@@ -248,7 +261,7 @@ function handleColorSelection(clickedCheckbox) {
     let numOfSelectedCheckbox = getSelectedCheckboxColors();
 
     if (numOfSelectedCheckbox > numOfPlayers) {
-        alert("You cannot select colors more than number of players.")
+        alert("You cannot select players more than number of players defined above.")
         clickedCheckbox.checked = !clickedCheckbox.checked;
         return;
     }
@@ -267,4 +280,92 @@ function getSelectedCheckboxColors() {
     return numOfSelectedCheckbox;
 }
 
+
+
+//Begin Game
+function beginGame() {
+    players = validateAndSaveConfiguration();
+    
+
+}
+
+
+// validate game configuration and save it
+function validateAndSaveConfiguration() {
+    let numOfSelectedCheckbox = getSelectedCheckboxColors();
+    let errorFound = false;
+    //validating player configuration
+    if (numOfPlayers != numOfSelectedCheckbox) {
+        errorFound = true;
+        fixError();
+    }
+
+    const selectedPlayers = [];
+
+    const allCheckbox = document.querySelectorAll('.cbp');
+    allCheckbox.forEach(checkbox => {
+        if (checkbox.checked) {
+            const parent = checkbox.parentNode;
+            let input;
+
+            // Get all children of the parent node (siblings)
+            const siblings = Array.from(parent.children);
+
+            // Highlight each sibling
+            siblings.forEach(sibling => {
+                if (sibling !== checkbox) {
+                    input = sibling;
+                }
+            });
+
+            if (input) {
+                const inputId = input.getAttribute("id");
+                const inputElement = document.getElementById(inputId);
+                const inputPlayerName = inputElement.value || getPlayerAlternateName(inputId);
+
+                const color = checkbox.classList[1].replace("cb-", "").toLowerCase()
+                const playerObj = {
+                    inputId,
+                    inputPlayerName,
+                    color,
+                }
+                selectedPlayers.push(playerObj);
+            }
+        }
+    });
+
+    for (let i = 0; i < selectedPlayers.length; i++) {
+        for (let j = i + 1; j < selectedPlayers.length; j++) {
+            if (selectedPlayers[i].inputPlayerName == selectedPlayers[j].inputPlayerName) {
+                errorFound = true;
+                alert("Players cannot have same name. Please change name");
+            }
+            if (errorFound) {
+                break;
+            }
+        }
+        if (errorFound) {
+            break;
+        }
+    }
+
+    if (errorFound) {
+        return
+    }
+
+    return selectedPlayers;
+}
+
+function fixError() {
+    alert("Seems like there is some issue with player configuration. Thus, restarting game");
+    localStorage.clear();
+    location.reload();
+}
+
+
+function getPlayerAlternateName(inputId) {
+    const playerNumber = inputId.split("-")[1].trim();
+    const playerName = defaultPlayerPrepend + " " + numberMapper[playerNumber];
+    return playerName;
+}
 // document.addEventListener('DOMContentLoaded', init);
