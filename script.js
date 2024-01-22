@@ -8,8 +8,7 @@ const pathHorizontalOne = document.getElementsByClassName("path-horizontal-one")
 const pathHorizontalTwo = document.getElementsByClassName("path-horizontal-two");
 const pathVerticalOne = document.getElementsByClassName("path-vertical-one");
 const pathVerticalTwo = document.getElementsByClassName("path-vertical-two");
-const rollDiceButton = document.getElementById("roll-dice");
-const dice = document.getElementById("dice");
+// const dice = document.getElementById("dice");
 const startGameButton = document.getElementById("start-game");
 const restartGameButton = document.getElementById("restart-game");
 const instructionText = document.getElementById("instruction");
@@ -168,34 +167,42 @@ document.querySelectorAll('.path-block').forEach(elem => {
     });
 });
 
-
 //Handling roll Dice Button click handler
-rollDiceButton.addEventListener("click", function (event) {
-    rollDiceButton.innerText = "Rolling...";
-    rollDiceButton.classList.add(disabledClass);
-    rollDiceButton.disabled = true;
+function handleDiceRoll(dice) {
+    dice.classList.add(disabledClass);
+    dice.disabled = true;
     if (isDiceRollingNow) {
         alert("dice is already rolling. Let it finish")
     }
     isDiceRollingNow = true;
-    let number;
+    let score;
     let iteration = 0;
     const totalIteration = rollForSeconds * 1000;
     dice.classList.add('dice-rolling');
     let interval = setInterval(function () {
-        number = Math.floor(Math.random() * 6) + 1;
-        dice.style.backgroundImage = `url('./assets/dice-${number}-${currentPlayer.color}.png')`;
+        score = Math.floor(Math.random() * 6) + 1;
+        dice.style.backgroundImage = `url('./assets/dice-${score}-${currentPlayer.color}.png')`;
         iteration = iteration + rollIntervalLapse;
         if (iteration >= totalIteration) {
             dice.classList.remove('dice-rolling');
             clearInterval(interval);
-            rollDiceButton.innerText = "Roll Dice";
+            dice.disabled = false;
+            dice.classList.remove(disabledClass);
             isDiceRollingNow = false;
-            rollDiceButton.classList.remove(disabledClass);
-            rollDiceButton.disabled = false;
         }
     }, rollIntervalLapse);
-})
+    currentPlayer.score = parseInt(score);
+}
+
+//handle player chance
+function handlerPlayerChance(currentPlayer) {
+    
+
+    //no coin is out
+    if (currentPlayer.coin_out.length < 1) {
+        return;
+    }
+}
 
 //Handling start game Button click handler
 startGameButton.addEventListener("click", function (event) {
@@ -316,10 +323,14 @@ function beginGame() {
     if (currentGameStatus == gameStatus.RUNNING) {
         return;
     }
-    // Add a click event listener to all elements with the class "path-block"
+
+    // Add a click event listener to all elements with the class 
     document.querySelectorAll('.dbb').forEach(elem => {
         elem.addEventListener('click', event => {
-            console.log("current clicked dice ****** ", event.target);
+            if (event.target.classList[1] == "dice-box-blank") {
+                return;
+            }
+            handleDiceRoll(event.target)
         });
     });
 
@@ -376,6 +387,8 @@ function validateAndSaveConfiguration() {
                     inputId,
                     inputPlayerName,
                     color,
+                    coin_in: [`${color}-coins-1`, `${color}-coins-2`, `${color}-coins-3`, `${color}-coins-4`],
+                    coin_out: [],
                     chance: index == 0 ? true : false,
                 }
                 selectedPlayers.push(playerObj);
