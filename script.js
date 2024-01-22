@@ -33,6 +33,24 @@ const numberMapper = {
     three: 3,
     four: 4,
 }
+const colorMapper = {
+    blue: {
+        backgroundColor: "#1a42d5",
+        color: "whitesmoke",
+    },
+    red: {
+        backgroundColor: "#D71313",
+        color: "whitesmoke",
+    },
+    green: {
+        backgroundColor: "#00DFA2",
+        color: "whitesmoke",
+    },
+    yellow: {
+        backgroundColor: "#FFF103",
+        color: "#333",
+    },
+}
 const gameRestartCommand = "restart_game";
 const blockCount = 18;
 const pathBlockClass = "path-block";
@@ -49,7 +67,8 @@ isDiceRollingNow = false;
 const pathIds = [];
 const defaultInstruction = "Game has not started yet. Click on Start Game Button";
 instructionText.innerText = defaultInstruction;
-let players = []
+let players = [];
+let currentPlayer;
 
 //function to update game current status
 function changeGameStatus(status) {
@@ -280,13 +299,22 @@ function getSelectedCheckboxColors() {
     return numOfSelectedCheckbox;
 }
 
+function setInstruction() {
+    const playerTurn = currentPlayer.inputPlayerName + "(" + currentPlayer.color + ")";
+    instructionText.innerText = "It's " + playerTurn + "chance to roll dice now";
+    instructionText.style.backgroundColor = colorMapper[currentPlayer.color].backgroundColor;
+    instructionText.style.color = colorMapper[currentPlayer.color].color;
+}
 
 
 //Begin Game
 function beginGame() {
     players = validateAndSaveConfiguration();
-    
-
+    changeGameStatus(gameStatus.RUNNING);
+    closeInitModal();
+    currentPlayer = players[0];
+    console.log(currentPlayer)
+    setInstruction();
 }
 
 
