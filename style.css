@@ -4,6 +4,7 @@ body {
     height: 100vh;
     display: flex;
     align-items: center;
+    font-family: monospace !important;
 }
 
 .sidebar {
@@ -309,17 +310,18 @@ body {
     animation: rollAnimationKeyframes 2s infinite linear;
 }
 
-button {
+.button {
+    font-family: monospace !important;
     width: fit-content;
-    padding: 15px 20px;
-    font-size: 22px;
-    border-radius: 10px;
+    padding: 5px 10px;
+    font-size: 15px;
+    border-radius: 8px;
     cursor: pointer;
     background-color: #3D3B40;
     color: whitesmoke;
 }
 
-button:hover {
+.button:hover {
     transition: 0.2s;
     background-color: transparent;
     border: 3px dotted 3D3B40;
@@ -337,7 +339,6 @@ button:hover {
 }
 
 #instruction {
-    font-family: monospace;
     font-size: 20px;
     font-weight: 800;
 }
@@ -354,7 +355,157 @@ button:hover {
     0% {
         transform: translateX(0);
     }
+
     100% {
-        transform: translateX(5px); /* Adjust the distance you want to vibrate */
+        transform: translateX(5px);
+        /* Adjust the distance you want to vibrate */
     }
+}
+
+/* MODAL */
+.modal {
+    font-family: monospace !important;
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5);
+    justify-content: center;
+    align-items: center;
+}
+
+/* Style for the modal content */
+.modal-content {
+    background-color: #fff;
+    padding: 20px;
+    border-radius: 8px;
+    text-align: center;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+
+.modal-content>h2 {
+    color: #333;
+}
+
+.select-color-m {
+    margin-top: 50px;
+}
+
+input {
+    width: 80%;
+    padding: 10px;
+    margin-top: 5px;
+    margin-bottom: 15px;
+    box-sizing: border-box;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    text-align: center;
+    font-weight: 800;
+    outline: none;
+}
+
+.inp-blue {
+    background-color: #1a42d5;
+    color: whitesmoke;
+}
+
+.inp-blue:focus {
+    border: 2px solid #1a42d5;
+    background-color: transparent;
+    color: #1a42d5;
+}
+
+.inp-red {
+    background-color: #D71313;
+    color: whitesmoke;
+}
+
+.inp-red:focus {
+    border: 2px solid #D71313;
+    background-color: transparent;
+    color: #D71313;
+}
+
+.inp-yellow {
+    background-color: #FFF103;
+    color: #333;
+}
+
+.inp-yellow:focus {
+    border: 2px solid #FFF103;
+    background-color: transparent;
+    color: #716c06;
+}
+
+.inp-green {
+    background-color: #00DFA2;
+    color: whitesmoke;
+}
+
+.inp-green:focus {
+    border: 2px solid #00DFA2;
+    background-color: transparent;
+    color: #00DFA2;
+}
+
+.button-m {
+    font-family: monospace !important;
+    background-color: #1a42d5;
+    color: white;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 16px;
+}
+
+.button-m:hover {
+    background-color: #0428aa;
+}
+
+.button-c {
+    font-family: monospace !important;
+    border: 1px solid #D71313;
+    color: #D71313;
+    padding: 10px 20px;
+    box-sizing: border-box;
+    background-color: transparent;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 16px;
+}
+
+.button-c:hover {
+    background-color: #a10303;
+    color: white;
+}
+
+.button-unselected {
+    font-family: monospace !important;
+    background-color: azure;
+    color: #45a049;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 16px;
+}
+
+.button-selected {
+    font-family: monospace !important;
+    background-color: #45a049;
+    color: azure;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 16px;
+}
+
+.m-bottom {
+    margin-top: 50px;
+    display: flex;
+    justify-content: space-around;
 }

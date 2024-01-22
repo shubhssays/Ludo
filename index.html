@@ -11,14 +11,14 @@
 <body>
     <div class="sidebar">
         <div class="button-holder">
-            <button id="start-game" >
+            <button class="button" id="start-game">
                 Start Game
             </button>
-            <button id="restart-game" >
+            <button class="button" id="restart-game">
                 Restart Game
             </button>
         </div>
-       
+
     </div>
     <div class="main">
         <div class="game-board-box">
@@ -133,12 +133,39 @@
         <div class="playground">
             <p id="instruction" class="vibrate-effect">Yellow Turns</p>
             <div id="dice"></div>
-            <button id="roll-dice" class="">Roll dice</button>
+            <button id="roll-dice" class="button">Roll dice</button>
         </div>
     </div>
 
-    <script src="alert.js"></script>
+    <!-- The Modal -->
+    <div id="init-modal" class="modal">
+        <div class="modal-content">
+            <h2>SELECT NUMBER OF PLAYERS</h2>
+
+            <button data-num="2" class="button-options button-selected" onclick="handleSelectedPlayers(this)">2 Player</button>
+            <button data-num="3" class="button-options button-unselected" onclick="handleSelectedPlayers(this)">3 Player</button>
+            <button data-num="4" class="button-options button-unselected" onclick="handleSelectedPlayers(this)">4 Player</button>
+
+
+            <div class="select-color-m">
+                <h2>CHOOSE COLOR AND PLAYER NAME</h2>
+
+                <input class="inp-blue" type="text" id="player-one" placeholder="Player 1" value="Player 1">
+                <input class="inp-red" type="text" id="player-two" placeholder="Player 3" value="Player 2">
+                <input class="inp-green" type="text" id="player-three" placeholder="Player 3" value="Player 3">
+                <input class="inp-yellow" type="text" id="player-four" placeholder="Player 4" value="Player 4">
+            </div>
+
+            <!-- Button to perform an action (e.g., submit form) -->
+            <div class="m-bottom">
+                <button id="close-init-modal" class="button-c">Close</button>
+                <button id="confirm-init-modal" class="button-m">Confirm</button>
+            </div>
+        </div>
+    </div>
+
     <script src="script.js"></script>
+
 </body>
 
 </html>
