@@ -509,3 +509,25 @@ input {
     display: flex;
     justify-content: space-around;
 }
+
+.m-inp-holder {
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+}
+
+.cb-blue {
+    accent-color: #1a42d5;
+}
+
+.cb-green {
+    accent-color: #00DFA2;
+}
+
+.cb-red {
+    accent-color: #D71313;
+}
+
+.cb-yellow {
+    accent-color: #FFF103;
+}

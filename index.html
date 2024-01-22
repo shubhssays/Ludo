@@ -142,18 +142,33 @@
         <div class="modal-content">
             <h2>SELECT NUMBER OF PLAYERS</h2>
 
-            <button data-num="2" class="button-options button-selected" onclick="handleSelectedPlayers(this)">2 Player</button>
-            <button data-num="3" class="button-options button-unselected" onclick="handleSelectedPlayers(this)">3 Player</button>
-            <button data-num="4" class="button-options button-unselected" onclick="handleSelectedPlayers(this)">4 Player</button>
+            <button data-num="2" class="button-options button-selected" onclick="handleSelectedPlayers(this)">2
+                Player</button>
+            <button data-num="3" class="button-options button-unselected" onclick="handleSelectedPlayers(this)">3
+                Player</button>
+            <button data-num="4" class="button-options button-unselected" onclick="handleSelectedPlayers(this)">4
+                Player</button>
 
 
             <div class="select-color-m">
                 <h2>CHOOSE COLOR AND PLAYER NAME</h2>
 
-                <input class="inp-blue" type="text" id="player-one" placeholder="Player 1" value="Player 1">
-                <input class="inp-red" type="text" id="player-two" placeholder="Player 3" value="Player 2">
-                <input class="inp-green" type="text" id="player-three" placeholder="Player 3" value="Player 3">
-                <input class="inp-yellow" type="text" id="player-four" placeholder="Player 4" value="Player 4">
+                <div class="m-inp-holder">
+                    <input class="cbp cb-blue" checked type="checkbox" id="cb-player-one" value="blue" onclick="handleColorSelection(this)">
+                    <input class="inp-blue" type="text" id="player-one" placeholder="Player 1" value="Player 1">
+                </div>
+                <div class="m-inp-holder">
+                    <input class="cbp cb-green" checked type="checkbox" id="cb-player-two" value="green" onclick="handleColorSelection(this)">
+                    <input class="inp-green" type="text" id="player-two" placeholder="Player 2" value="Player 2">
+                </div>
+                <div class="m-inp-holder">
+                    <input class="cbp cb-red" type="checkbox" id="cb-player-three" value="red" onclick="handleColorSelection(this)">
+                    <input class="inp-red" type="text" id="player-three" placeholder="Player 3" value="Player 3">
+                </div>
+                <div class="m-inp-holder">
+                    <input class="cbp cb-yellow" type="checkbox" id="cb-player-four" value="yellow" onclick="handleColorSelection(this)">
+                    <input class="inp-yellow" type="text" id="player-four" placeholder="Player 4" value="Player 4">
+                </div>
             </div>
 
             <!-- Button to perform an action (e.g., submit form) -->

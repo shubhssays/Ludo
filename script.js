@@ -202,25 +202,69 @@ function closeModal(modal) {
 // function to close init modal
 closeInitModelButton.addEventListener("click", function () {
     closeModal(initModal);
-})
-
+});
 
 openModal(initModal)
 
 //function to handle number of selected players
 function handleSelectedPlayers(clickedButton) {
-    // Remove 'button-selected' class from all buttons
+    let numOfSelectedCheckbox = getSelectedCheckboxColors();
     const buttons = document.querySelectorAll('.button-options');
     buttons.forEach(button => {
         button.classList.add('button-unselected');
         button.classList.remove('button-selected');
     });
 
-    // Add 'button-selected' class to the clicked button
     clickedButton.classList.remove('button-unselected');
     clickedButton.classList.add('button-selected');
     numOfPlayers = parseInt(clickedButton.getAttribute("data-num"));
-    console.log("numOfPlayers", numOfPlayers);
+    if (numOfSelectedCheckbox > numOfPlayers) {
+        const unselectNumOfCheckbox = numOfSelectedCheckbox - numOfPlayers;
+        let init = 0;
+        const allCheckbox = Array.from(document.querySelectorAll('.cbp'));
+        //unselecting checkbox from last
+        allCheckbox.reverse();
+        allCheckbox.forEach(checkbox => {
+            if (checkbox.checked && init < unselectNumOfCheckbox) {
+                checkbox.checked = !checkbox.checked;
+                init++;
+            }
+        });
+    } else {
+        const selectNumOfCheckbox = numOfPlayers - numOfSelectedCheckbox;
+        let init = 0;
+        const allCheckbox = Array.from(document.querySelectorAll('.cbp'));
+        allCheckbox.forEach(checkbox => {
+            if (!checkbox.checked && init < selectNumOfCheckbox) {
+                checkbox.checked = !checkbox.checked;
+                init++;
+            }
+        });
+    }
+}
+
+//function to handle choose colors
+function handleColorSelection(clickedCheckbox) {
+    let numOfSelectedCheckbox = getSelectedCheckboxColors();
+
+    if (numOfSelectedCheckbox > numOfPlayers) {
+        alert("You cannot select colors more than number of players.")
+        clickedCheckbox.checked = !clickedCheckbox.checked;
+        return;
+    }
+    lastSelectedColorCheckBox = clickedCheckbox;
+}
+
+
+function getSelectedCheckboxColors() {
+    let numOfSelectedCheckbox = 0;
+    const allCheckbox = document.querySelectorAll('.cbp');
+    allCheckbox.forEach(checkbox => {
+        if (checkbox.checked) {
+            numOfSelectedCheckbox++;
+        }
+    });
+    return numOfSelectedCheckbox;
 }
 
 // document.addEventListener('DOMContentLoaded', init);
