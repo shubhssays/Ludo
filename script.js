@@ -65,6 +65,7 @@ const colorMapper = {
         color: "#333",
     },
 }
+const secondsToWaitForAnotherChance = 2;
 const gameRestartCommand = "restart_game";
 const blockCount = 18;
 const pathBlockClass = "path-block";
@@ -235,9 +236,11 @@ function handlerPlayerChance() {
 
     //checking if action is empty, transfer the chance to next player in players array
 
-    if (!action) {
-        nextPlayerTurn()
-    }
+    setTimeout(function(){
+        if (!action) {
+            nextPlayerTurn()
+        }
+    },secondsToWaitForAnotherChance * 1000)
 }
 
 //function to change currentPlayer chance
