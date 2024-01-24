@@ -758,6 +758,22 @@ function getCoinCurrentPosition(coinId) {
     return coinPosition;
 }
 
+//function to show all home coins holder
+function showHomeCoinsHolder() {
+    const homeCoinHolder = document.querySelectorAll(".hch");
+    homeCoinHolder.forEach(coinHolder => {
+        coinHolder.style.display = "flex";
+    });
+}
+
+//function to hide all home coins holder
+function hideHomeCoinsHolder() {
+    const homeCoinHolder = document.querySelectorAll(".hch");
+    homeCoinHolder.forEach(coinHolder => {
+        coinHolder.style.display = "none";
+    });
+}
+
 /*
 players = [
     {

@@ -35,6 +35,56 @@ body {
     padding: 0;
 }
 
+.game-board-master {
+    display: flex;
+    width: 100%;
+    justify-content: center;
+}
+
+.home-coin-holder {
+    height: 100%;
+    width: 80px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-around;
+    align-items: center;
+}
+
+.hch {
+    padding: 4px;
+    height: 200px;
+    width: 50px;
+    display: none;
+    flex-direction: column;
+    justify-content: space-around;
+    align-items: center;
+}
+
+.hch > div {
+    height: 50px;
+    width: 50px;
+}
+
+#hch-blue {
+    margin-right: 20px;
+    box-shadow: rgba(8, 47, 148, 0.314) 0px 5px 15px;
+}
+
+#hch-red {
+    margin-left: 20px;
+    box-shadow: rgba(137, 2, 2, 0.35) 0px 5px 15px;
+}
+
+#hch-green {
+    margin-left: 20px;
+    box-shadow: rgba(52, 125, 15, 0.391) 0px 5px 15px;
+}
+
+#hch-yellow {
+    margin-right: 20px;
+    box-shadow: rgba(224, 232, 17, 0.35) 0px 5px 15px;
+}
+
 .game-board-box {
     height: 754px;
     width: 754px;
@@ -82,7 +132,6 @@ body {
 .path-vertical-one, .path-vertical-two {
     height: 300px;
     width: 150px;
-    ;
     background-color: whitesmoke;
     display: grid;
     grid-template-columns: repeat(auto-fill, minmax(50px, 1fr));
@@ -329,9 +378,11 @@ body {
 .coin-rotate {
     background-size: 75%;
     border-radius: 50%;
-    border: 2px dashed black; /* Dotted border */
+    border: 2px dashed black;
+    /* Dotted border */
     position: relative;
-    animation: rotate 2s linear infinite; /* Rotation animation */
+    animation: rotate 2s linear infinite;
+    /* Rotation animation */
 }
 
 /* Keyframes for the rotation animation */
@@ -339,6 +390,7 @@ body {
     from {
         transform: rotate(0deg);
     }
+
     to {
         transform: rotate(360deg);
     }
