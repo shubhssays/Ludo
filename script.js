@@ -442,7 +442,7 @@ function validateAndSaveConfiguration() {
             if (input) {
                 const inputId = input.getAttribute("id");
                 const inputElement = document.getElementById(inputId);
-                const inputPlayerName = inputElement.value || getPlayerAlternateName(inputId);
+                const inputPlayerName = (inputElement.value || getPlayerAlternateName(inputId)).toUpperCase();
 
                 const color = checkbox.classList[1].replace("cb-", "").toLowerCase()
                 const playerObj = {
