@@ -11,7 +11,7 @@ const pathVerticalTwo = document.getElementsByClassName("path-vertical-two");
 // const dice = document.getElementById("dice");
 const startGameButton = document.getElementById("start-game");
 const restartGameButton = document.getElementById("restart-game");
-const instructionText = document.getElementById("instruction");
+// const instructionText = document.getElementById("instruction");
 const initModal = document.getElementById("init-modal");
 const closeInitModelButton = document.getElementById("close-init-modal");
 const confirmInitModelButton = document.getElementById("confirm-init-modal");
@@ -19,7 +19,7 @@ const playerOneInput = document.getElementById("player-one");
 const playerTwoInput = document.getElementById("player-two");
 const playerThreeInput = document.getElementById("player-three");
 const playerFourInput = document.getElementById("player-four");
-const diceHolder = document.getElementById("dice-holder");
+// const diceHolder = document.getElementById("dice-holder");
 
 // game constants
 const gameStatus = {
@@ -89,7 +89,7 @@ let currentGameStatus = gameStatus.NOT_STARTED;
 isDiceRollingNow = false;
 const pathIds = [];
 const defaultInstruction = "Game has not started yet. Click on Start Game Button";
-instructionText.innerText = defaultInstruction;
+// instructionText.innerText = defaultInstruction;
 let players = [];
 let currentPlayer;
 let currentChance;
@@ -374,12 +374,12 @@ function getSelectedCheckboxColors() {
 }
 
 //function to update instruction
-function setInstruction() {
-    const playerTurn = currentPlayer.inputPlayerName + "(" + currentPlayer.color + ")";
-    instructionText.innerText = "It's " + playerTurn + " chance to roll dice now";
-    instructionText.style.backgroundColor = colorMapper[currentPlayer.color].backgroundColor;
-    instructionText.style.color = colorMapper[currentPlayer.color].color;
-}
+// function setInstruction() {
+//     const playerTurn = currentPlayer.inputPlayerName + "(" + currentPlayer.color + ")";
+//     instructionText.innerText = "It's " + playerTurn + " chance to roll dice now";
+//     instructionText.style.backgroundColor = colorMapper[currentPlayer.color].backgroundColor;
+//     instructionText.style.color = colorMapper[currentPlayer.color].color;
+// }
 
 //Begin Game
 function beginGame() {
@@ -397,7 +397,7 @@ function beginGame() {
         });
     });
 
-    diceHolder.style.display = "block";
+    // diceHolder.style.display = "block";
     players = validateAndSaveConfiguration();
     if (!players || players.length < 1) {
         return;
@@ -758,6 +758,7 @@ function getCoinCurrentPosition(coinId) {
     return coinPosition;
 }
 
+/*
 players = [
     {
         "inputId": "player-one",
@@ -856,8 +857,9 @@ currentPlayer = {
         "blue-coins-4": null
     }
 }
+*/
 
-moveCoin("blue-coins-1", 8)
+// moveCoin("blue-coins-1", 9)
 
 
 
