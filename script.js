@@ -65,7 +65,14 @@ const colorMapper = {
         color: "#333",
     },
 }
-const secondsToWaitForAnotherChance = 2;
+const pathToTraverse = {
+    blue: ['h_id_1_1', 'h_id_2_1', 'h_id_3_1', 'h_id_4_1', 'h_id_5_1', 'v_id_15_1', 'v_id_12_1', 'v_id_9_1', 'v_id_6_1', 'v_id_3_1', 'v_id_0_1', 'v_id_1_1', 'v_id_2_1', 'v_id_5_1', 'v_id_8_1', 'v_id_11_1', 'v_id_14_1', 'v_id_17_1', 'h_id_0_2', 'h_id_1_2', 'h_id_2_2', 'h_id_3_2', 'h_id_4_2', 'h_id_5_2', 'h_id_11_2', 'h_id_17_2', 'h_id_16_2', 'h_id_15_2', 'h_id_14_2', 'h_id_13_2', 'h_id_12_2', 'v_id_2_2', 'v_id_5_2', 'v_id_8_2', 'v_id_11_2', 'v_id_14_2', 'v_id_17_2', 'v_id_16_2', 'v_id_15_2', 'v_id_12_2', 'v_id_9_2', 'v_id_6_2', 'v_id_3_2', 'v_id_0_2', 'h_id_17_1', 'h_id_16_1', 'h_id_15_1', 'h_id_14_1', 'h_id_13_1', 'h_id_12_1', 'h_id_6_1', 'h_id_7_1', 'h_id_8_1', 'h_id_9_1', 'h_id_10_1', 'h_id_11_1'],
+    red: ['v_id_5_1', 'v_id_8_1', 'v_id_11_1', 'v_id_14_1', 'v_id_17_1', 'h_id_0_2', 'h_id_1_2', 'h_id_2_2', 'h_id_3_2', 'h_id_4_2', 'h_id_5_2', 'h_id_11_2', 'h_id_17_2', 'h_id_16_2', 'h_id_15_2', 'h_id_14_2', 'h_id_13_2', 'h_id_12_2', 'v_id_2_2', 'v_id_5_2', 'v_id_8_2', 'v_id_11_2', 'v_id_14_2', 'v_id_17_2', 'v_id_16_2', 'v_id_15_2', 'v_id_12_2', 'v_id_9_2', 'v_id_6_2', 'v_id_3_2', 'v_id_0_2', 'h_id_17_1', 'h_id_16_1', 'h_id_15_1', 'h_id_14_1', 'h_id_13_1', 'h_id_12_1', 'h_id_6_1', 'h_id_0_1', 'h_id_1_1', 'h_id_2_1', 'h_id_3_1', 'h_id_4_1', 'h_id_5_1', 'v_id_15_1', 'v_id_12_1', 'v_id_9_1', 'v_id_6_1', 'v_id_3_1', 'v_id_0_1', 'v_id_1_1', 'v_id_4_1', 'v_id_7_1', 'v_id_10_1', 'v_id_13_1', 'v_id_16_1'],
+    green: ['h_id_16_2', 'h_id_15_2', 'h_id_14_2', 'h_id_13_2', 'h_id_12_2', 'v_id_2_2', 'v_id_5_2', 'v_id_8_2', 'v_id_11_2', 'v_id_14_2', 'v_id_17_2', 'v_id_16_2', 'v_id_15_2', 'v_id_12_2', 'v_id_9_2', 'v_id_6_2', 'v_id_3_2', 'v_id_0_2', 'h_id_17_1', 'h_id_16_1', 'h_id_15_1', 'h_id_14_1', 'h_id_13_1', 'h_id_12_1', 'h_id_6_1', 'h_id_0_1', 'h_id_1_1', 'h_id_2_1', 'h_id_3_1', 'h_id_4_1', 'h_id_5_1', 'v_id_15_1', 'v_id_12_1', 'v_id_9_1', 'v_id_6_1', 'v_id_3_1', 'v_id_0_1', 'v_id_1_1', 'v_id_2_1', 'v_id_5_1', 'v_id_8_1', 'v_id_11_1', 'v_id_14_1', 'v_id_17_1', 'h_id_0_2', 'h_id_1_2', 'h_id_2_2', 'h_id_3_2', 'h_id_4_2', 'h_id_5_2', 'h_id_11_2', 'h_id_10_2', 'h_id_9_2', 'h_id_8_2', 'h_id_7_2', 'h_id_6_2'],
+    yellow: ['v_id_12_2', 'v_id_9_2', 'v_id_6_2', 'v_id_3_2', 'v_id_0_2', 'h_id_17_1', 'h_id_16_1', 'h_id_15_1', 'h_id_14_1', 'h_id_13_1', 'h_id_12_1', 'h_id_6_1', 'h_id_0_1', 'h_id_1_1', 'h_id_2_1', 'h_id_3_1', 'h_id_4_1', 'h_id_5_1', 'v_id_15_1', 'v_id_12_1', 'v_id_9_1', 'v_id_6_1', 'v_id_3_1', 'v_id_0_1', 'v_id_1_1', 'v_id_2_1', 'v_id_5_1', 'v_id_8_1', 'v_id_11_1', 'v_id_14_1', 'v_id_17_1', 'h_id_0_2', 'h_id_1_2', 'h_id_2_2', 'h_id_3_2', 'h_id_4_2', 'h_id_5_2', 'h_id_11_2', 'h_id_17_2', 'h_id_16_2', 'h_id_15_2', 'h_id_14_2', 'h_id_13_2', 'h_id_12_2', 'v_id_2_2', 'v_id_5_2', 'v_id_8_2', 'v_id_11_2', 'v_id_14_2', 'v_id_17_2', 'v_id_16_2', 'v_id_13_2', 'v_id_10_2', 'v_id_7_2', 'v_id_4_2', 'v_id_1_2']
+}
+const starPathBlock = ["v_id_11_2", "h_id_3_2", "v_id_6_1", "h_id_14_1", "v_id_12_2", "h_id_1_1", "v_id_5_1", "h_id_16_2"];
+const secondsToWaitForAnotherChance = 1;
 const gameRestartCommand = "restart_game";
 const blockCount = 18;
 const pathBlockClass = "path-block";
@@ -75,6 +82,7 @@ const idAppendOne = "_1";
 const idAppendTwo = "_2";
 const rollForSeconds = 2;
 const rollIntervalLapse = 120;
+const coinMovementFrequency = 180;
 const disabledClass = "disabled";
 let numOfPlayers = 2;
 let currentGameStatus = gameStatus.NOT_STARTED;
@@ -175,7 +183,11 @@ if (restartStatus != null && restartStatus) {
 // Add a click event listener to all elements with the class "path-block"
 document.querySelectorAll('.path-block').forEach(elem => {
     elem.addEventListener('click', event => {
-        alert(event.target.id);
+        console.log(event.target.id);
+        elem.style.backgroundColor = "brown"
+        setTimeout(function () {
+            elem.style.backgroundColor = ""
+        }, 1000);
     });
 });
 
@@ -209,11 +221,6 @@ function handleDiceRoll(dice) {
 
 //handle player chance
 function handlerPlayerChance() {
-    const allCoinRotate = document.querySelectorAll(".coin-rotate");
-    allCoinRotate.forEach(coinRotate => {
-        coinRotate.classList.remove('coin-rotate');
-    });
-
     const player = currentPlayer;
     const color = currentPlayer.color;
     const score = parseInt(player.score);
@@ -225,14 +232,12 @@ function handlerPlayerChance() {
     if (player.coin_out.length < 1) {
         //checking if score is 6 then, highlight the coins
         if (score == diceVal.six) {
-            const allCoins = document.querySelectorAll(`.${coins}`);
-            allCoins.forEach(eachCoin => {
-                eachCoin.classList.add('coin-rotate');
-            });
+            startCoinRotation(coins);
             action = playerActions.MOVE;
         }
+    } else if (player.coin_out.length > 0) {
+        startCoinRotation(coins);
     }
-
 
     //checking if action is empty, transfer the chance to next player in players array
     if (!action) {
@@ -240,7 +245,6 @@ function handlerPlayerChance() {
             nextPlayerTurn()
         }, secondsToWaitForAnotherChance * 1000)
     }
-
 }
 
 //function to change currentPlayer chance
@@ -406,7 +410,6 @@ function beginGame() {
     setBlink();
 }
 
-
 // validate game configuration and save it
 function validateAndSaveConfiguration() {
     let numOfSelectedCheckbox = getSelectedCheckboxColors();
@@ -448,9 +451,41 @@ function validateAndSaveConfiguration() {
                     color,
                     coin_in: [`${color}-coins-1`, `${color}-coins-2`, `${color}-coins-3`, `${color}-coins-4`],
                     coin_out: [],
-                    chance: index == 0 ? true : false,
+                    coin_home: [],
+                    coin_position: {
+                        [`${color}-coins-1`]: null,
+                        [`${color}-coins-2`]: null,
+                        [`${color}-coins-3`]: null,
+                        [`${color}-coins-4`]: null,
+                    },
+                    // chance: index == 0 ? true : false,
                 }
                 selectedPlayers.push(playerObj);
+
+                // click listener on color-coins
+                document.querySelectorAll(`.${color}-coins`).forEach(elem => {
+                    elem.addEventListener('click', event => {
+                        const score = currentPlayer.score || 0;
+                        if (score < 1) {
+                            console.log("score is less than 1")
+                            return;
+                        }
+                        const coinId = event.target.id;
+                        const coin_home = currentPlayer.coin_home || [];
+                        if (coin_home.includes(coinId)) {
+                            alert("This coin is already home. Please click another coin.")
+                            return;
+                        }
+                        const coin_in = currentPlayer.coin_in || [];
+                        const coin_out = currentPlayer.coin_out || [];
+
+                        if (!coin_out.includes(coinId) && !(score == diceVal.six && coin_in.includes(coinId))) {
+                            console.log("not your chance or coin is inside")
+                            return;
+                        }
+                        executeCoinMovement(coinId)
+                    });
+                });
             }
         }
     });
@@ -473,7 +508,7 @@ function validateAndSaveConfiguration() {
     if (errorFound) {
         return
     }
-
+    console.log(selectedPlayers)
     return selectedPlayers;
 }
 
@@ -493,33 +528,130 @@ function getPlayerAlternateName(inputId) {
 
 // blink color board by based on player's turn
 function setBlink() {
-    console.log("currentPlayer ******* ", currentPlayer)
-    blueBoard.classList.remove("blink-blue");
-    redBoard.classList.remove("blink-red");
-    greenBoard.classList.remove("blink-green");
-    yellowBoard.classList.remove("blink-yellow");
+    console.log("currentPlayer ******* ", currentPlayer);
+    stopColorBoxBlinking();
 
-    const allFingerArrow = document.querySelectorAll('.finger');
-    allFingerArrow.forEach(fingerArrow => {
-        fingerArrow.classList.add('hide')
+    stopFingerBlinking();
+
+    emptyDiceBox();
+
+    startColorBoxBlinking();
+
+    startFingerBlinking();
+
+    addDiceToDiceBox();
+}
+
+// function to make coins move
+function executeCoinMovement(coinId) {
+    console.log("executeCoinMovement ******* ", coinId);
+    const score = currentPlayer.score;
+    currentPlayer.score = 0;
+    const coin_in = currentPlayer.coin_in;
+    const coin_out = currentPlayer.coin_out;
+    const color = currentPlayer.color;
+    const coinCurrentPositionId = currentPlayer.coin_position[coinId];
+
+    //coin is inside
+    if (coin_in.includes(coinId)) {
+        if (score != diceVal.six) {
+            return;
+        }
+
+        // coin is inside and player scored 6
+        stopCoinRotation();
+    } else if (coin_out.includes(coinId)) {
+        const coinCurrentPositionIndex = pathToTraverse[color].findIndex(coinCurrentPositionId);
+        const coinFinalPosition = coinCurrentPositionIndex + score;
+        const pathBlockId = pathToTraverse[color][coinFinalPosition];
+        console.log("pathBlockId ********* ", pathBlockId);
+        stopCoinRotation();
+        if (!checkIfPathIsSafe(pathBlockId) && (checkIfCoinPathBlockIsOccupied(pathBlockId) != null)) {
+            //path block is occupied by another coin, cut it
+
+            //now, iterate the cut-coin from current position back to inside color block
+
+            //give current player another chance
+        }
+
+        //iterate the coin from current position to pathBlockId
+
+        //now, next player chance
+        nextPlayerTurn()
+    } else {
+        fixError()
+        return;
+    }
+}
+
+// function to check how many coins are present at any given path block
+function checkIfCoinPathBlockIsOccupied(pathBlockId) {
+    for (let player of players) {
+        if (player.inputId != currentPlayer.inputId) {
+            const coin_position = player.coin_position;
+            for (let coin in coin_position) {
+                if (coin_position[coin] == pathBlockId) {
+                    return coin;
+                }
+            }
+        }
+    }
+    return null;
+}
+
+// function to stop current coin rotation
+function stopCoinRotation() {
+    const allCoinRotate = document.querySelectorAll(".coin-rotate");
+    allCoinRotate.forEach(coinRotate => {
+        coinRotate.classList.remove('coin-rotate');
     });
+}
 
-    const allDiceBox = document.querySelectorAll('.dbb');
-    allDiceBox.forEach(diceBox => {
-        diceBox.classList = 'dbb dice-box-blank';
-        diceBox.style.backgroundImage = "";
+// function to start current coin rotation
+function startCoinRotation(coins) {
+    const allCoins = document.querySelectorAll(`.${coins}`);
+    allCoins.forEach(eachCoin => {
+        eachCoin.classList.add('coin-rotate');
     });
+}
 
+// function to check if a particular path block is safe zone i.e. marked with star
+function checkIfPathIsSafe(pathBlockId) {
+    if (starPathBlock.includes(pathBlockId)) {
+        return true;
+    }
+    return false;
+}
 
-    const currentBoard = document.getElementById(`board-${currentPlayer.color}`)
-    const currentBlinking = `blink-${currentPlayer.color}`;
-    currentBoard.classList.add(currentBlinking);
+// function to start current player finger blinking
+function startFingerBlinking() {
     const diceOd = document.getElementById(`od-${currentPlayer.color}`);
     const fingerArrow = diceOd.querySelector(".finger");
     if (fingerArrow) {
         fingerArrow.classList.remove('hide');
     }
+}
 
+// function to stop finger blinking
+function stopFingerBlinking() {
+    const allFingerArrow = document.querySelectorAll('.finger');
+    allFingerArrow.forEach(fingerArrow => {
+        fingerArrow.classList.add('hide')
+    });
+}
+
+// function to make dice box blank
+function emptyDiceBox() {
+    const allDiceBox = document.querySelectorAll('.dbb');
+    allDiceBox.forEach(diceBox => {
+        diceBox.classList = 'dbb dice-box-blank';
+        diceBox.style.backgroundImage = "";
+    });
+}
+
+// function to add dice to current player dice box
+function addDiceToDiceBox() {
+    const diceOd = document.getElementById(`od-${currentPlayer.color}`);
     const diceBoxBlank = diceOd.querySelector(".dbb");
     if (diceBoxBlank) {
         diceBoxBlank.classList.remove('dice-box-blank');
@@ -527,7 +659,98 @@ function setBlink() {
     }
 }
 
+// function to start blink current player color box
+function startColorBoxBlinking() {
+    const currentBoard = document.getElementById(`board-${currentPlayer.color}`)
+    const currentBlinking = `blink-${currentPlayer.color}`;
+    currentBoard.classList.add(currentBlinking);
+}
 
+// function to stop blink current player color box
+function stopColorBoxBlinking() {
+    blueBoard.classList.remove("blink-blue");
+    redBoard.classList.remove("blink-red");
+    greenBoard.classList.remove("blink-green");
+    yellowBoard.classList.remove("blink-yellow");
+}
 
+// function to move coin from one position to another
+function moveCoin(coinId, startIndex, endIndex) {
+    let isForwardMovement = true;
+
+    // find coin color
+    const color = getColorFromCoinId(coinId);
+
+    // find current position of coin
+    const coinCurrentPositionId = players.find(player => player.color == color).coin_position[coinId];
+
+    //check for forward or backward movement
+    if (startIndex > endIndex) {
+        isForwardMovement = false;
+    }
+
+    //move it now
+    for (let i = 0; i < Math.abs(startIndex - endIndex); i++) {
+        // const pathBlockId = pathToTraverse[color][]
+        setTimeout(function () {
+            drawCoin(coinId, pathBlockId);
+        }, coinMovementFrequency);
+    }
+
+    //update the coin details in player array
+}
+
+// function to get color from coinId
+function getColorFromCoinId(coinId) {
+    const color = coinId.split("-")[0];
+    return color;
+}
+
+// function to draw coin on board
+function drawCoin(coinId, pathBlockId) {
+    const color = getColorFromCoinId(coinId);
+    let coinElement;
+
+    //get current position of coin
+    let coinPosition = currentPlayer.coin_position[coinId];
+    if (coinPosition == null) { //it means coin is inside home color block
+        coinPosition = coinId;
+    }
+    //get coin element
+    coinElement = document.getElementById(coinPosition);
+    const colorClass = `${color}-coins`;
+
+    //remove coin from its current position
+    coinElement.classList.remove(colorClass);
+
+    //populate coin at given pathBlockId
+    const pathBlock = document.getElementById(pathBlockId);
+    pathBlock.classList.add(colorClass);
+
+    //updating coin position
+    currentPlayer.coin_position[coinId] = pathBlockId;
+}
+
+currentPlayer = {
+    "inputId": "player-one",
+    "inputPlayerName": "Player 1",
+    "color": "blue",
+    "coin_in": [
+        "blue-coins-1",
+        "blue-coins-2",
+        "blue-coins-3",
+        "blue-coins-4"
+    ],
+    "coin_out": [],
+    "coin_home": [],
+    "coin_position": {
+        "blue-coins-1": null,
+        "blue-coins-2": null,
+        "blue-coins-3": null,
+        "blue-coins-4": null
+    }
+}
+
+drawCoin("blue-coins-1", "h_id_3_1")
 
 // document.addEventListener('DOMContentLoaded', init);
