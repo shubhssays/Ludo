@@ -94,7 +94,7 @@ let players = [];
 let currentPlayer;
 let currentChance;
 let currentPlayerDiceScore = [];
-
+hideHomeCoinsHolder();
 //function to update game current status
 function changeGameStatus(status) {
     currentGameStatus = status;
@@ -458,8 +458,8 @@ function validateAndSaveConfiguration() {
                         [`${color}-coins-3`]: null,
                         [`${color}-coins-4`]: null,
                     },
-                    // chance: index == 0 ? true : false,
-                }
+                };
+                document.getElementById(`${color}-player-name`).innerText = inputPlayerName
                 selectedPlayers.push(playerObj);
 
                 // click listener on color-coins
@@ -509,6 +509,7 @@ function validateAndSaveConfiguration() {
         return
     }
     console.log(selectedPlayers)
+    showHomeCoinsHolder()
     return selectedPlayers;
 }
 

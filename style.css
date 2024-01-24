@@ -60,7 +60,7 @@ body {
     align-items: center;
 }
 
-.hch > div {
+.hch>div {
     height: 50px;
     width: 50px;
 }
@@ -107,6 +107,7 @@ body {
 
 .game-separator {
     display: flex;
+    position: relative;
 }
 
 .white-area {
@@ -469,8 +470,7 @@ body {
 }
 
 
-/* playground */
-.playground {
+/* .playground {
     width: 100%;
     height: 200px;
     border: 1px solid gray;
@@ -480,9 +480,9 @@ body {
     align-items: center;
     justify-content: center;
     flex-direction: column;
-}
+} */
 
-#dice {
+/* #dice {
     height: 80px;
     width: 80px;
     box-sizing: border-box;
@@ -492,7 +492,7 @@ body {
     background-repeat: no-repeat;
     background-size: 75%;
     transform-style: preserve-3d;
-}
+} */
 
 @keyframes rollAnimationKeyframes {
     0% {
@@ -504,17 +504,17 @@ body {
     }
 }
 
-#roll-dice {
+/* #roll-dice {
     margin-right: 20px;
-}
+} */
 
 .dice-rolling {
     animation: rollAnimationKeyframes 2s infinite linear;
 }
 
-#dice-holder {
+/* #dice-holder {
     display: none;
-}
+} */
 
 .button {
     font-family: monospace !important;
@@ -549,13 +549,13 @@ body {
     font-weight: 800;
 }
 
-.vibrate-effect {
+/* .vibrate-effect {
     width: fit-content;
     height: fit-content;
     padding: 5px;
     background-color: bisque;
     animation: vibrateAnimation 0.2s ease-in-out infinite alternate;
-}
+} */
 
 @keyframes vibrateAnimation {
     0% {
@@ -815,4 +815,50 @@ input {
 
 .hide {
     display: none;
+}
+
+/* Player name */
+
+#blue-player-name {
+    /* display: none; */
+    position: absolute;
+    transform: rotate(90deg);
+    top: 50%;
+    left: -2%;
+    color: whitesmoke;
+    font-weight: 800;
+    font-size: 15px;
+}
+
+#red-player-name {
+    /* display: none; */
+    font-size: 16px;
+    position: absolute;
+    top: 10%;
+    left: 75%;
+    top: 2%;
+    color: whitesmoke;
+    font-weight: 800;
+}
+
+#green-player-name {
+    /* display: none; */
+    font-size: 16px;
+    position: absolute;
+    transform: rotate(270deg);
+    top: 50%;
+    left: 94%;
+    color: whitesmoke;
+    font-weight: 800;
+    white-space: nowrap;
+}
+
+#yellow-player-name {
+    /* display: none; */
+    position: absolute;
+    font-size: 16px;
+    bottom: 2%;
+    left: 14%;
+    color: #333;
+    font-weight: 800;
 }
