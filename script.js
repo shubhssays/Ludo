@@ -82,7 +82,7 @@ const idAppendOne = "_1";
 const idAppendTwo = "_2";
 const rollForSeconds = 2;
 const rollIntervalLapse = 120;
-const coinMovementFrequency = 180;
+const coinMovementFrequency = 500;
 const disabledClass = "disabled";
 let numOfPlayers = 2;
 let currentGameStatus = gameStatus.NOT_STARTED;
@@ -562,9 +562,9 @@ function executeCoinMovement(coinId) {
         stopCoinRotation();
     } else if (coin_out.includes(coinId)) {
         const coinCurrentPositionIndex = pathToTraverse[color].findIndex(coinCurrentPositionId);
-        const coinFinalPosition = coinCurrentPositionIndex + score;
-        const pathBlockId = pathToTraverse[color][coinFinalPosition];
-        console.log("pathBlockId ********* ", pathBlockId);
+        const numberOfTraverse = coinCurrentPositionIndex + score;
+        // const pathBlockId = pathToTraverse[color][coinFinalPosition];
+        // console.log("pathBlockId ********* ", pathBlockId);
         stopCoinRotation();
         if (!checkIfPathIsSafe(pathBlockId) && (checkIfCoinPathBlockIsOccupied(pathBlockId) != null)) {
             //path block is occupied by another coin, cut it
@@ -675,27 +675,44 @@ function stopColorBoxBlinking() {
 }
 
 // function to move coin from one position to another
-function moveCoin(coinId, startIndex, endIndex) {
-    let isForwardMovement = true;
+function moveCoin(coinId, numberOfTraverse) {
 
     // find coin color
     const color = getColorFromCoinId(coinId);
 
-    // find current position of coin
-    const coinCurrentPositionId = players.find(player => player.color == color).coin_position[coinId];
-
-    //check for forward or backward movement
-    if (startIndex > endIndex) {
-        isForwardMovement = false;
-    }
-
     //move it now
-    for (let i = 0; i < Math.abs(startIndex - endIndex); i++) {
-        // const pathBlockId = pathToTraverse[color][]
-        setTimeout(function () {
-            drawCoin(coinId, pathBlockId);
-        }, coinMovementFrequency);
-    }
+    let movementCount = 0;
+    // find current position of coin
+
+    let interval = setInterval(function () {
+        if (movementCount >= numberOfTraverse) {
+            clearInterval(interval);
+            console.log("move **** ", movementCount, "completed")
+        }
+        let pathBlockId;
+        let coinCurrentPositionId = getCoinCurrentPosition(coinId);
+        console.log("move **** ", movementCount)
+        console.log("color **** ", color)
+        console.log("coinCurrentPositionId **** ", coinCurrentPositionId)
+        console.log("check 1 **** ", coinCurrentPositionId == coinId)
+        if (coinCurrentPositionId == coinId) {
+            positionIndex = 0;
+        } else {
+            console.log("check yahn ***** ", typeof positionIndex != "undefined", positionIndex)
+            if (typeof positionIndex != "undefined") {
+                console.log("andar yahn **** ", movementCount)
+                positionIndex = pathToTraverse[color].findIndex(elem => elem == coinCurrentPositionId);
+            }
+        }
+        if (coinCurrentPositionId != coinId) {
+            positionIndex = positionIndex + 1;
+        }
+        console.log("positionIndex **** ", positionIndex)
+        pathBlockId = pathToTraverse[color][positionIndex];
+        console.log("pathBlock **** ", pathBlockId)
+        drawCoin(coinId, pathBlockId);
+        movementCount++
+    }, coinMovementFrequency);
 
     //update the coin details in player array
 }
@@ -708,14 +725,13 @@ function getColorFromCoinId(coinId) {
 
 // function to draw coin on board
 function drawCoin(coinId, pathBlockId) {
+    console.log("drawCoin called ********* ")
     const color = getColorFromCoinId(coinId);
     let coinElement;
 
     //get current position of coin
-    let coinPosition = currentPlayer.coin_position[coinId];
-    if (coinPosition == null) { //it means coin is inside home color block
-        coinPosition = coinId;
-    }
+    let coinPosition = getCoinCurrentPosition(coinId);
+
     //get coin element
     coinElement = document.getElementById(coinPosition);
     const colorClass = `${color}-coins`;
@@ -728,8 +744,98 @@ function drawCoin(coinId, pathBlockId) {
     pathBlock.classList.add(colorClass);
 
     //updating coin position
-    currentPlayer.coin_position[coinId] = pathBlockId;
+    players.find(player => player.color == color).coin_position[coinId] = pathBlockId;
+    console.log("Check ******* ", getCoinCurrentPosition(coinId) + "\n \n")
 }
+
+//function to get current position of coin
+function getCoinCurrentPosition(coinId) {
+    const color = getColorFromCoinId(coinId);
+    let coinPosition = players.find(player => player.color == color).coin_position[coinId];
+    if (coinPosition == null) { //it means coin is inside home color block
+        coinPosition = coinId;
+    }
+    return coinPosition;
+}
+
+players = [
+    {
+        "inputId": "player-one",
+        "inputPlayerName": "Player 1",
+        "color": "blue",
+        "coin_in": [
+            "blue-coins-1",
+            "blue-coins-2",
+            "blue-coins-3",
+            "blue-coins-4"
+        ],
+        "coin_out": [],
+        "coin_home": [],
+        "coin_position": {
+            "blue-coins-1": null,
+            "blue-coins-2": null,
+            "blue-coins-3": null,
+            "blue-coins-4": null
+        }
+    },
+    {
+        "inputId": "player-two",
+        "inputPlayerName": "Player 2",
+        "color": "red",
+        "coin_in": [
+            "red-coins-1",
+            "red-coins-2",
+            "red-coins-3",
+            "red-coins-4"
+        ],
+        "coin_out": [],
+        "coin_home": [],
+        "coin_position": {
+            "red-coins-1": null,
+            "red-coins-2": null,
+            "red-coins-3": null,
+            "red-coins-4": null
+        }
+    },
+    {
+        "inputId": "player-three",
+        "inputPlayerName": "Player 3",
+        "color": "green",
+        "coin_in": [
+            "green-coins-1",
+            "green-coins-2",
+            "green-coins-3",
+            "green-coins-4"
+        ],
+        "coin_out": [],
+        "coin_home": [],
+        "coin_position": {
+            "green-coins-1": null,
+            "green-coins-2": null,
+            "green-coins-3": null,
+            "green-coins-4": null
+        }
+    },
+    {
+        "inputId": "player-four",
+        "inputPlayerName": "Player 4",
+        "color": "yellow",
+        "coin_in": [
+            "yellow-coins-1",
+            "yellow-coins-2",
+            "yellow-coins-3",
+            "yellow-coins-4"
+        ],
+        "coin_out": [],
+        "coin_home": [],
+        "coin_position": {
+            "yellow-coins-1": null,
+            "yellow-coins-2": null,
+            "yellow-coins-3": null,
+            "yellow-coins-4": null
+        }
+    }
+]
 
 currentPlayer = {
     "inputId": "player-one",
@@ -751,6 +857,12 @@ currentPlayer = {
     }
 }
 
-drawCoin("blue-coins-1", "h_id_3_1")
+moveCoin("blue-coins-1", 8)
+
+
+
+
+
+
 
 // document.addEventListener('DOMContentLoaded', init);
