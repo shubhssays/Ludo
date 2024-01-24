@@ -65,6 +65,7 @@ const colorMapper = {
         color: "#333",
     },
 }
+const allColors = ["blue", "red", "green", "yellow"];
 const pathToTraverse = {
     blue: ['h_id_1_1', 'h_id_2_1', 'h_id_3_1', 'h_id_4_1', 'h_id_5_1', 'v_id_15_1', 'v_id_12_1', 'v_id_9_1', 'v_id_6_1', 'v_id_3_1', 'v_id_0_1', 'v_id_1_1', 'v_id_2_1', 'v_id_5_1', 'v_id_8_1', 'v_id_11_1', 'v_id_14_1', 'v_id_17_1', 'h_id_0_2', 'h_id_1_2', 'h_id_2_2', 'h_id_3_2', 'h_id_4_2', 'h_id_5_2', 'h_id_11_2', 'h_id_17_2', 'h_id_16_2', 'h_id_15_2', 'h_id_14_2', 'h_id_13_2', 'h_id_12_2', 'v_id_2_2', 'v_id_5_2', 'v_id_8_2', 'v_id_11_2', 'v_id_14_2', 'v_id_17_2', 'v_id_16_2', 'v_id_15_2', 'v_id_12_2', 'v_id_9_2', 'v_id_6_2', 'v_id_3_2', 'v_id_0_2', 'h_id_17_1', 'h_id_16_1', 'h_id_15_1', 'h_id_14_1', 'h_id_13_1', 'h_id_12_1', 'h_id_6_1', 'h_id_7_1', 'h_id_8_1', 'h_id_9_1', 'h_id_10_1', 'h_id_11_1'],
     red: ['v_id_5_1', 'v_id_8_1', 'v_id_11_1', 'v_id_14_1', 'v_id_17_1', 'h_id_0_2', 'h_id_1_2', 'h_id_2_2', 'h_id_3_2', 'h_id_4_2', 'h_id_5_2', 'h_id_11_2', 'h_id_17_2', 'h_id_16_2', 'h_id_15_2', 'h_id_14_2', 'h_id_13_2', 'h_id_12_2', 'v_id_2_2', 'v_id_5_2', 'v_id_8_2', 'v_id_11_2', 'v_id_14_2', 'v_id_17_2', 'v_id_16_2', 'v_id_15_2', 'v_id_12_2', 'v_id_9_2', 'v_id_6_2', 'v_id_3_2', 'v_id_0_2', 'h_id_17_1', 'h_id_16_1', 'h_id_15_1', 'h_id_14_1', 'h_id_13_1', 'h_id_12_1', 'h_id_6_1', 'h_id_0_1', 'h_id_1_1', 'h_id_2_1', 'h_id_3_1', 'h_id_4_1', 'h_id_5_1', 'v_id_15_1', 'v_id_12_1', 'v_id_9_1', 'v_id_6_1', 'v_id_3_1', 'v_id_0_1', 'v_id_1_1', 'v_id_4_1', 'v_id_7_1', 'v_id_10_1', 'v_id_13_1', 'v_id_16_1'],
@@ -509,7 +510,8 @@ function validateAndSaveConfiguration() {
         return
     }
     console.log(selectedPlayers)
-    showHomeCoinsHolder()
+    showHomeCoinsHolder();
+    markNonParticipantsColor(selectedPlayers);
     return selectedPlayers;
 }
 
@@ -773,6 +775,27 @@ function hideHomeCoinsHolder() {
     homeCoinHolder.forEach(coinHolder => {
         coinHolder.style.display = "none";
     });
+}
+
+// function to unselect non participants color
+function markNonParticipantsColor(selectedPlayers) {
+    const nonParticipantsColor = allColors.filter(color => !selectedPlayers.some(player => color === player.color)) || [];
+    nonParticipantsColor?.map(color => {
+        //fading the color of non participants color board
+        document.getElementById(`board-${color}`).style.opacity = 0.4;
+
+        //hiding the home coins holder by making it completely transparent
+        document.getElementById(`hch-${color}`).style.opacity = 0;
+
+        //removing the dice-box holder of  non participants color board
+        document.getElementsByClassName(`color-star-${color}`)[0].parentNode.innerHTML = "";
+
+        // removing color coins from board of non participants color
+        for (let i = 0; i < 4; i++) {
+            const colorCoins = document.getElementById(`${color}-coins-${i + 1}`)
+            colorCoins.parentNode.removeChild(colorCoins);
+        }
+    })
 }
 
 /*
