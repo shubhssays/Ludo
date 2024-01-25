@@ -81,7 +81,8 @@ const idAppendOne = "_1";
 const idAppendTwo = "_2";
 const rollForSeconds = 2;
 const rollIntervalLapse = 120;
-const coinMovementFrequency = 500;
+const coinForwardMovementFrequency = 500;
+const coinBackwardMovementFrequency = 100;
 const disabledClass = "disabled";
 let numOfPlayers = 2;
 let currentGameStatus = gameStatus.NOT_STARTED;
@@ -708,8 +709,8 @@ function stopColorBoxBlinking() {
 }
 
 // function to move coin from one position to another
-function moveCoin(coinId, numberOfTraverse) {
-
+function moveCoin(coinId, numberOfTraverse, isForward = true) {
+    const motionFrequency  = isForward ? coinForwardMovementFrequency : coinBackwardMovementFrequency;
     if (currentGameStatus != gameStatus.RUNNING) {
         alert("Game is not running");
         return;
@@ -745,13 +746,17 @@ function moveCoin(coinId, numberOfTraverse) {
         }
         movementCount++
         if (coinCurrentPositionId != coinId) {
-            positionIndex = positionIndex + 1;
+            if (isForward) {
+                positionIndex = positionIndex + 1;
+            } else {
+                positionIndex = positionIndex - 1;
+            }
         }
         console.log("positionIndex **** ", positionIndex)
         pathBlockId = pathToTraverse[color][positionIndex];
         console.log("pathBlock **** ", pathBlockId)
-        drawCoin(coinId, pathBlockId);
-    }, coinMovementFrequency);
+        drawCoin(coinId, pathBlockId, isForward);
+    }, motionFrequency);
 
     //update the coin details in player array
 }
@@ -763,7 +768,7 @@ function getColorFromCoinId(coinId) {
 }
 
 // function to draw coin on board
-function drawCoin(coinId, pathBlockId) {
+function drawCoin(coinId, pathBlockId, isForward) {
     console.log("drawCoin called ********* ")
     const color = getColorFromCoinId(coinId);
     const pathBlock = document.getElementById(pathBlockId);
@@ -827,8 +832,17 @@ function drawCoin(coinId, pathBlockId) {
             allCoinChild[0].remove();
         }
 
-        //populate coin at given pathBlockId
-        pathBlock.classList.add(colorClass);
+        // if pathBlock is null then check if the pathBlock ends
+        if (pathBlock) {
+            //populate coin at given pathBlockId
+            pathBlock.classList.add(colorClass);
+        } else {
+            if (isForward) {
+                document.getElementById(coinId).classList.add(`hch-${color}`);
+            } else {
+                document.getElementById(coinId).classList.add(`${color}-coins`);
+            }
+        }
     }
 
     //updating coin position
@@ -839,7 +853,7 @@ function drawCoin(coinId, pathBlockId) {
 // function to check if same color coins sits on same path block
 function isSameColorOccupiesPathBlock(coinId, pathBlockId) {
     let count = 0;
-    if (!pathBlockId && !pathBlockId.startsWith("h_id") || !pathBlockId.startsWith("v_id")) {
+    if (!pathBlockId || !pathBlockId.startsWith("h_id") || !pathBlockId.startsWith("v_id")) {
         return count;
     }
     console.log("same color check ***** start");
