@@ -471,43 +471,7 @@ body {
 }
 
 
-/* black star background color */
 
-#v_id_11_2, #h_id_3_2, #v_id_6_1, #h_id_14_1 {
-    /* background-image: url('./assets/black-star.png');
-    background-size: cover;
-    background-position: center;
-    background-repeat: no-repeat;
-    background-size: 75%;
-    display: flex;
-    align-items: center;
-    justify-content: center; */
-}
-
-
-/* .playground {
-    width: 100%;
-    height: 200px;
-    border: 1px solid gray;
-    margin-top: 20px;
-    padding-bottom: 20px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    flex-direction: column;
-} */
-
-/* #dice {
-    height: 80px;
-    width: 80px;
-    box-sizing: border-box;
-    background-image: url('./assets/roll-dice.png');
-    background-size: cover;
-    background-position: center;
-    background-repeat: no-repeat;
-    background-size: 75%;
-    transform-style: preserve-3d;
-} */
 
 @keyframes rollAnimationKeyframes {
     0% {
@@ -563,14 +527,6 @@ body {
     font-size: 20px;
     font-weight: 800;
 }
-
-/* .vibrate-effect {
-    width: fit-content;
-    height: fit-content;
-    padding: 5px;
-    background-color: bisque;
-    animation: vibrateAnimation 0.2s ease-in-out infinite alternate;
-} */
 
 @keyframes vibrateAnimation {
     0% {
@@ -878,6 +834,8 @@ input {
     font-weight: 800;
 }
 
+/* black star background color */
+
 .black-star {
     height: 45px;
     width: 45px;
@@ -886,6 +844,10 @@ input {
     background-position: center;
     background-repeat: no-repeat;
     background-size: 75%;
+}
+
+#h_id_14_1, #h_id_3_2 {
+    flex-direction: column;
 }
 
 .h-bst {

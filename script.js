@@ -88,8 +88,6 @@ let numOfPlayers = 2;
 let currentGameStatus = gameStatus.NOT_STARTED;
 isDiceRollingNow = false;
 const pathIds = [];
-const defaultInstruction = "Game has not started yet. Click on Start Game Button";
-// instructionText.innerText = defaultInstruction;
 let players = [];
 let currentPlayer;
 let currentChance;
@@ -125,6 +123,14 @@ function changeGameStatus(status) {
             startGameButton.style.display = "none";
             break;
     }
+}
+
+//creating reversePath traverse
+const reversePathTraverse = {
+    blue: [...pathToTraverse.blue].reverse(),
+    red: [...pathToTraverse.red].reverse(),
+    green: [...pathToTraverse.green].reverse(),
+    yellow: [...pathToTraverse.yellow].reverse(),
 }
 
 changeGameStatus(currentGameStatus)
@@ -710,16 +716,50 @@ function stopColorBoxBlinking() {
 
 // function to move coin from one position to another
 function moveCoin(coinId, numberOfTraverse, isForward = true) {
-    const motionFrequency  = isForward ? coinForwardMovementFrequency : coinBackwardMovementFrequency;
     if (currentGameStatus != gameStatus.RUNNING) {
         alert("Game is not running");
         return;
     }
+    const motionFrequency = isForward ? coinForwardMovementFrequency : coinBackwardMovementFrequency;
 
     // find coin color
     const color = getColorFromCoinId(coinId);
 
-    //move it now
+    // adding check to see if number of traverse is possible or not
+    const currentPositionId = getCoinCurrentPosition(coinId);
+
+    if (isForward) {
+        const maxForwardPathTraverseValue = pathToTraverse[color].length
+        if (currentPositionId == coinId) {
+            if (numberOfTraverse > maxForwardPathTraverseValue) {
+                alert("Impossible move forward 1")
+                return;
+            }
+        } else {
+            const currentPositionIndex = pathToTraverse[color].findIndex(elem => elem == currentPositionId);
+            if (numberOfTraverse > maxForwardPathTraverseValue - currentPositionIndex) {
+                alert("Impossible move forward 2")
+                return;
+            }
+        }
+    } else {
+        const maxForwardPathTraverseValue = reversePathTraverse[color].length
+        if (currentPositionId == coinId) {
+            if (numberOfTraverse > maxForwardPathTraverseValue) {
+                alert("Impossible move backward 1")
+                return;
+            }
+        } else {
+            const currentPositionIndex = reversePathTraverse[color].findIndex(elem => elem == currentPositionId);
+            if (numberOfTraverse > maxForwardPathTraverseValue - currentPositionIndex) {
+                alert("Impossible move backward 2")
+                return;
+            }
+        }
+    }
+
+
+    // move it now
     let movementCount = 0;
     // find current position of coin
 
@@ -774,6 +814,8 @@ function drawCoin(coinId, pathBlockId, isForward) {
     const pathBlock = document.getElementById(pathBlockId);
 
     let coinElement;
+
+    let isHome = 0; // 0 - just a normal movement && 1 - when won && -1 -> when coin is cut
 
     //get current position of coin
     let coinPosition = getCoinCurrentPosition(coinId);
@@ -838,15 +880,28 @@ function drawCoin(coinId, pathBlockId, isForward) {
             pathBlock.classList.add(colorClass);
         } else {
             if (isForward) {
-                document.getElementById(coinId).classList.add(`hch-${color}`);
+                const div = document.createElement("div");
+                div.classList = "blue-coins";
+                document.getElementById(`hch-${color}`).appendChild(div);
+                isHome = 1;
             } else {
                 document.getElementById(coinId).classList.add(`${color}-coins`);
+                isHome = -1;
             }
         }
     }
 
     //updating coin position
-    players.find(player => player.color == color).coin_position[coinId] = pathBlockId;
+    if (isHome == 0) {
+        players.find(player => player.color == color).coin_position[coinId] = pathBlockId;
+    } else if (isHome == 1) {
+        players.find(player => player.color == color).coin_position[coinId] = null;
+        players.find(player => player.color == color).coin_home.push(coinId)
+    } else if (isHome == -1) {
+        players.find(player => player.color == color).coin_position[coinId] = null;
+        players.find(player => player.color == color).coin_in.push(coinId)
+    }
+
     console.log("players ******* ", players)
 }
 
@@ -875,7 +930,6 @@ function isSameColorOccupiesPathBlock(coinId, pathBlockId) {
     console.log("count ******* ", count);
     return count;
 }
-
 
 //function to get current position of coin
 function getCoinCurrentPosition(coinId) {
