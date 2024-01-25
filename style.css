@@ -11,10 +11,14 @@ body {
     height: inherit;
     background-color: #EEF5FF;
     width: 250px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
 }
 
 .button-holder {
-    margin: 20px;
+    margin-top: 20px;
+    margin-bottom: 20px;
     display: flex;
     flex-direction: column;
 }
@@ -307,6 +311,8 @@ body {
 }
 
 .blue-coins {
+    height: 50px;
+    width: 50px;
     background-image: url('./assets/blue-star.png');
     background-size: cover;
     background-position: center;
@@ -336,6 +342,8 @@ body {
 }
 
 .red-coins {
+    height: 50px;
+    width: 50px;
     background-image: url('./assets/red-star.png');
     background-size: cover;
     background-position: center;
@@ -366,6 +374,8 @@ body {
 }
 
 .yellow-coins {
+    height: 50px;
+    width: 50px;
     background-image: url('./assets/yellow-star.png');
     background-size: cover;
     background-position: center;
@@ -417,6 +427,8 @@ body {
 }
 
 .green-coins {
+    height: 50px;
+    width: 50px;
     background-image: url('./assets/green-star.png');
     background-size: cover;
     background-position: center;
@@ -433,6 +445,9 @@ body {
     width: 50px;
     box-sizing: border-box;
     border: 2px solid #494848;
+    display: flex;
+    justify-content: center;
+    align-items: center;
 }
 
 
@@ -459,14 +474,14 @@ body {
 /* black star background color */
 
 #v_id_11_2, #h_id_3_2, #v_id_6_1, #h_id_14_1 {
-    background-image: url('./assets/black-star.png');
+    /* background-image: url('./assets/black-star.png');
     background-size: cover;
     background-position: center;
     background-repeat: no-repeat;
     background-size: 75%;
     display: flex;
     align-items: center;
-    justify-content: center;
+    justify-content: center; */
 }
 
 
@@ -861,4 +876,26 @@ input {
     left: 14%;
     color: #333;
     font-weight: 800;
+}
+
+.black-star {
+    height: 45px;
+    width: 45px;
+    background-image: url('./assets/black-star.png');
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    background-size: 75%;
+}
+
+.h-bst {
+    border-radius: 50%;
+    margin: 0 -20px;
+    z-index: 1;
+}
+
+.v-bst {
+    border-radius: 50%;
+    margin: -20px 0;
+    z-index: 1;
 }
