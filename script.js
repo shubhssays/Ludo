@@ -71,7 +71,7 @@ const pathToTraverse = {
 }
 const blackStars = ["v_id_11_2", "h_id_3_2", "v_id_6_1", "h_id_14_1"]
 const starPathBlock = ["v_id_11_2", "h_id_3_2", "v_id_6_1", "h_id_14_1", "v_id_12_2", "h_id_1_1", "v_id_5_1", "h_id_16_2"];
-const secondsToWaitForAnotherChance = 1;
+const secondsToWaitForAnotherChance = 0.8;
 const gameRestartCommand = "restart_game";
 const blockCount = 18;
 const pathBlockClass = "path-block";
@@ -229,15 +229,15 @@ if (restartStatus != null && restartStatus) {
 }
 
 // Add a click event listener to all elements with the class "path-block"
-document.querySelectorAll('.path-block').forEach(elem => {
-    elem.addEventListener('click', event => {
-        console.log(event.target.id);
-        elem.style.backgroundColor = "brown"
-        setTimeout(function () {
-            elem.style.backgroundColor = ""
-        }, 1000);
-    });
-});
+// document.querySelectorAll('.path-block').forEach(elem => {
+//     elem.addEventListener('click', event => {
+//         console.log(event.target.id);
+//         elem.style.backgroundColor = "brown"
+//         setTimeout(function () {
+//             elem.style.backgroundColor = ""
+//         }, 1000);
+//     });
+// });
 
 //Handling roll Dice Button click handler
 function handleDiceRoll(dice) {
@@ -252,7 +252,7 @@ function handleDiceRoll(dice) {
     const totalIteration = rollForSeconds * 1000;
     dice.classList.add('dice-rolling');
     let interval = setInterval(function () {
-        score = Math.floor(Math.random() * 6) + 1;
+        score = Math.floor(Math.random() * 2) + 5;//Math.floor(Math.random() * 6) + 5;
         dice.style.backgroundImage = `url('./assets/dice-${score}-${currentPlayer.color}.png')`;
         iteration = iteration + rollIntervalLapse;
         if (iteration >= totalIteration) {
@@ -285,10 +285,8 @@ function handlerPlayerChance() {
         }
     } else if (player.coin_out.length > 0) {
         startCoinRotation(coins);
-    }
-
-    //checking if action is empty, transfer the chance to next player in players array
-    if (!action) {
+    } else {
+        //checking if action is empty, transfer the chance to next player in players array
         setTimeout(function () {
             nextPlayerTurn()
         }, secondsToWaitForAnotherChance * 1000)
@@ -297,6 +295,15 @@ function handlerPlayerChance() {
 
 //function to change currentPlayer chance
 function nextPlayerTurn() {
+    if (currentGameStatus == gameStatus.NOT_STARTED && initModal.style.display != "none") {
+        changeGameStatus(gameStatus.RUNNING);
+        closeInitModal();
+        currentPlayer = players[0];
+        currentChance = currentPlayer.color;
+        setBlink();
+        return;
+    }
+
     console.log("nextPlayerTurn called")
     console.log("currentPlayer before *** ", currentPlayer);
     const playersLength = players.length;
@@ -441,11 +448,8 @@ function beginGame() {
     if (!players || players.length < 1) {
         return;
     }
-    changeGameStatus(gameStatus.RUNNING);
-    closeInitModal();
-    currentPlayer = players[0];
-    currentChance = currentPlayer.color;
-    setBlink();
+    changeGameStatus(gameStatus.NOT_STARTED);
+    nextPlayerTurn()
 }
 
 // validate game configuration and save it
@@ -592,32 +596,35 @@ function executeCoinMovement(coinId) {
     const color = currentPlayer.color;
     const coinCurrentPositionId = currentPlayer.coin_position[coinId];
 
+    // stop coin rotation
+    stopCoinRotation();
+
     //coin is inside
     if (coin_in.includes(coinId)) {
         if (score != diceVal.six) {
             return;
         }
-
         // coin is inside and player scored 6
-        stopCoinRotation();
+        moveCoin(coinId, 1, true, false);
+        //marking this coins as out
+        const player = players.find(player => player.color == color);
+        const indexToRemove = player.coin_in.indexOf(coinId);
+        player.coin_in.splice(indexToRemove, 1);
+        player.coin_out.push(coinId);
+        stopFingerBlinking();
     } else if (coin_out.includes(coinId)) {
         const coinCurrentPositionIndex = pathToTraverse[color].findIndex(coinCurrentPositionId);
         const numberOfTraverse = coinCurrentPositionIndex + score;
         // const pathBlockId = pathToTraverse[color][coinFinalPosition];
         // console.log("pathBlockId ********* ", pathBlockId);
         stopCoinRotation();
-        if (!checkIfPathIsSafe(pathBlockId) && (checkIfCoinPathBlockIsOccupied(pathBlockId) != null)) {
-            //path block is occupied by another coin, cut it
 
-            //now, iterate the cut-coin from current position back to inside color block
-
-            //give current player another chance
-        }
+        moveCoin(coinId, numberOfTraverse, true, true);
 
         //iterate the coin from current position to pathBlockId
 
         //now, next player chance
-        nextPlayerTurn()
+        // nextPlayerTurn()
     } else {
         fixError()
         return;
@@ -629,9 +636,9 @@ function checkIfCoinPathBlockIsOccupied(pathBlockId) {
     for (let player of players) {
         if (player.inputId != currentPlayer.inputId) {
             const coin_position = player.coin_position;
-            for (let coin in coin_position) {
-                if (coin_position[coin] == pathBlockId) {
-                    return coin;
+            for (let coinId in coin_position) {
+                if (coin_position[coinId] == pathBlockId) {
+                    return coinId;
                 }
             }
         }
@@ -715,7 +722,7 @@ function stopColorBoxBlinking() {
 }
 
 // function to move coin from one position to another
-function moveCoin(coinId, numberOfTraverse, isForward = true) {
+function moveCoin(coinId, numberOfTraverse, isForward = true, callNextPlayerTurn = false) {
     if (currentGameStatus != gameStatus.RUNNING) {
         alert("Game is not running");
         return;
@@ -769,6 +776,16 @@ function moveCoin(coinId, numberOfTraverse, isForward = true) {
         if (movementCount + 1 >= numberOfTraverse) {
             clearInterval(interval);
             console.log("move **** ", movementCount, "completed")
+
+            if (callNextPlayerTurn) {
+                if (currentPlayer.score != diceVal.six) {
+                    nextPlayerTurn();
+                } else {
+                    startFingerBlinking();
+                }
+            } else {
+                setBlink(false);
+            }
         }
         let pathBlockId;
         let coinCurrentPositionId = getCoinCurrentPosition(coinId);
@@ -827,6 +844,20 @@ function drawCoin(coinId, pathBlockId, isForward) {
     console.log("CHECK ********* ", pathBlockId, " if ******* ", blackStars.includes(pathBlockId))
 
     const colorClass = `${color}-coins`;
+
+    //checking if another coin is present in the same place
+    if (!checkIfPathIsSafe(pathBlockId) && (checkIfCoinPathBlockIsOccupied(pathBlockId) != null)) {
+        //path block is occupied by another coin, cut it
+        const otherCoinId = checkIfCoinPathBlockIsOccupied(pathBlockId);
+        if (otherCoinId != null) {
+            //marking coin as in after cut
+            const player = players.find(player => player.color == color);
+            player.coin_in.push(coinId);
+            const indexToRemove = player.indexOf(coinId);
+            player.splice(indexToRemove, 1);
+            toCutCoins(otherCoinId);
+        }
+    }
 
     // if coin sits on a black star, then remove div instead of removing just class
     if (blackStars.includes(pathBlockId)) {
@@ -895,13 +926,18 @@ function drawCoin(coinId, pathBlockId, isForward) {
     if (isHome == 0) {
         players.find(player => player.color == color).coin_position[coinId] = pathBlockId;
     } else if (isHome == 1) {
-        players.find(player => player.color == color).coin_position[coinId] = null;
-        players.find(player => player.color == color).coin_home.push(coinId)
+        const player = players.find(player => player.color == color);
+        const indexToRemove = player.coin_out.indexOf(coinId);
+        player.coin_out.splice(indexToRemove, 1);
+        player.coin_position[coinId] = null;
+        player.coin_home.push(coinId);
     } else if (isHome == -1) {
-        players.find(player => player.color == color).coin_position[coinId] = null;
-        players.find(player => player.color == color).coin_in.push(coinId)
+        const player = players.find(player => player.color == color);
+        const indexToRemove = player.coin_out.indexOf(coinId);
+        player.coin_out.splice(indexToRemove, 1);
+        player.coin_position[coinId] = null;
+        player.coin_in.push(coinId)
     }
-
     console.log("players ******* ", players)
 }
 
