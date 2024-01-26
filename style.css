@@ -853,11 +853,11 @@ input {
 .h-bst {
     border-radius: 50%;
     margin: 0 -20px;
-    z-index: 1;
+    /* z-index: 1; */
 }
 
 .v-bst {
     border-radius: 50%;
     margin: -20px 0;
-    z-index: 1;
+    /* z-index: 1; */
 }
