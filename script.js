@@ -978,12 +978,25 @@ function markNonParticipantsColor(selectedPlayers) {
     })
 }
 
+// get the className of bst
 function getBstClassName(blackStar) {
     let dynamicBst = "h";
     if (blackStar.startsWith("h")) {
         dynamicBst = "v";
     }
     return dynamicBst;
+}
+
+//to replace coins
+function toCutCoins(coinId) {
+    const color = getColorFromCoinId(coinId);
+    if (!players.find(player => player.color == color).coin_out.includes(coinId)) {
+        throw new Error(`${coinId} coin is not out`);
+    }
+    const currentPositionId = players.find(player => player.color == color).coin_position[coinId];
+    const currentPositionIdIndex = reversePathTraverse[color].findIndex(elem => elem == currentPositionId);
+    const numberOfTraverse = reversePathTraverse[color].length - currentPositionIdIndex;
+    moveCoin(coinId, numberOfTraverse, false);
 }
 
 /*
