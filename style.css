@@ -389,7 +389,7 @@ body {
 .coin-rotate {
     background-size: 75%;
     border-radius: 50%;
-    border: 2px dashed black;
+    /* border: 2px dashed black; */
     /* Dotted border */
     position: relative;
     animation: rotate 2s linear infinite;
@@ -846,7 +846,7 @@ input {
     background-size: 75%;
 }
 
-#h_id_14_1, #h_id_3_2 {
+#h_id_14_1, #h_id_3_, #h_id_1_1, #h_id_16_2 {
     flex-direction: column;
 }
 
