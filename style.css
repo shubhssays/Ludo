@@ -311,6 +311,7 @@ body {
 }
 
 .blue-coins {
+    cursor: pointer;
     height: 50px;
     width: 50px;
     background-image: url('./assets/blue-star.png');
@@ -342,6 +343,7 @@ body {
 }
 
 .red-coins {
+    cursor: pointer;
     height: 50px;
     width: 50px;
     background-image: url('./assets/red-star.png');
@@ -374,6 +376,7 @@ body {
 }
 
 .yellow-coins {
+    cursor: pointer;
     height: 50px;
     width: 50px;
     background-image: url('./assets/yellow-star.png');
@@ -427,6 +430,7 @@ body {
 }
 
 .green-coins {
+    cursor: pointer;
     height: 50px;
     width: 50px;
     background-image: url('./assets/green-star.png');
@@ -846,7 +850,7 @@ input {
     background-size: 75%;
 }
 
-#h_id_14_1, #h_id_3_, #h_id_1_1, #h_id_16_2 {
+#h_id_14_1, #h_id_3_, #h_id_1_1, #h_id_16_2, #h_id_3_2 {
     flex-direction: column;
 }
 

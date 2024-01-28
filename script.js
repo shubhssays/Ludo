@@ -188,23 +188,36 @@ for (let blackStar of blackStars) {
 }
 
 
- //detecting changes for star path block using MutationObserver
-for(let star of [...blackStars, ...colorSafeStars]){
+//detecting changes for star path block using MutationObserver
+for (let star of [...blackStars, ...colorSafeStars]) {
     const blackStarPathBlock = document.getElementById(star);
     const observer = new MutationObserver(mutations => {
         mutations.forEach(mutation => {
             // Check if nodes were added
             if (mutation.type === 'childList' && mutation.addedNodes.length > 0) {
-                console.log('New inner div added!', mutation);
-                const uniqueCoins = [];
                 let bstClass = blackStarPathBlock.childNodes[0].classList.value;
                 if (bstClass.includes("h-bst")) {
                     bstClass = "h-bst";
                 } else {
                     bstClass = "v-bst";
                 }
-                for (let c = 1; c < blackStarPathBlock.childNodes.length; c++) {
-                    blackStarPathBlock.childNodes[c].style.display = "none";
+                let colorCount = {};
+                for (let c = 0; c < blackStarPathBlock.childNodes.length; c++) {
+                    console.log("mutation *** c", c)
+                    const childNode = blackStarPathBlock.childNodes[c];
+                    const childNodeClassList = childNode.classList.value.toString().
+                        split(" ");
+                    console.log("childNode *** ", childNode, "childNodeClassList *** ", childNodeClassList);
+                    for (let cl of childNodeClassList) {
+                        console.log("colorCount *** ", colorCount);
+                        if (cl.includes("-coins") && !cl.includes("-star")) {
+                            if (colorCount.hasOwnProperty(cl)) {
+                                childNode.style.display = "none";
+                            } else {
+                                colorCount[cl] = 1;
+                            }
+                        }
+                    }
                 }
             }
         });
@@ -230,16 +243,9 @@ document.querySelectorAll('.path-block').forEach(elem => {
             return;
         }
         const color = currentPlayer.color;
-        console.log("`${color}-coins`", `${color}-coins`)
-        console.log("check 1  ******** ", elem.classList)
-        console.log("check 2  ******** ", elem.classList.toString());
-        console.log("check 3 elem.id ******** ", elem.id);
-        console.log("check 4  ******** ", elem.querySelectorAll(`.${color}-coins`).length > 0);
         if (elem.classList.toString().includes(`${color}-coins`) || elem.querySelectorAll(`.${color}-coins`).length > 0) {
             const coin_position = currentPlayer.coin_position;
-            console.log("coin_position  ******** ", coin_position);
             for (let coinId in coin_position) {
-                console.log("check ######  ", coin_position[coinId], elem.id, coin_position[coinId] == elem.id);
                 if (coin_position[coinId] == elem.id) {
                     document.getElementById(coinId).click();
                     break;
@@ -600,13 +606,11 @@ function setBlink() {
 
 // function to make coins move
 function executeCoinMovement(coinId) {
-    console.log("executeCoinMovement ******* ", coinId);
     const score = currentPlayer.score;
     currentPlayer.score = 0;
     const coin_in = currentPlayer.coin_in;
     const coin_out = currentPlayer.coin_out;
     const color = currentPlayer.color;
-    const coinCurrentPositionId = currentPlayer.coin_position[coinId];
 
     // stop coin rotation
     stopCoinRotation();
@@ -625,8 +629,7 @@ function executeCoinMovement(coinId) {
         player.coin_out.push(coinId);
         stopFingerBlinking();
     } else if (coin_out.includes(coinId)) {
-        // const coinCurrentPositionIndex = pathToTraverse[color].findIndex(elem => elem == coinCurrentPositionId);
-        const numberOfTraverse = score// coinCurrentPositionIndex + score;
+        const numberOfTraverse = score;
         moveCoin(coinId, numberOfTraverse, true, true);
     } else {
         fixError()
@@ -641,6 +644,7 @@ function checkIfCoinPathBlockIsOccupied(pathBlockId) {
             const coin_position = player.coin_position;
             for (let coinId in coin_position) {
                 if (coin_position[coinId] == pathBlockId) {
+                    console.log("checkIfCoinPathBlockIsOccupied **** ", coinId, pathBlockId)
                     return coinId;
                 }
             }
@@ -749,35 +753,37 @@ function moveCoin(coinId, numberOfTraverse, isForward = true, callNextPlayerTurn
     // adding check to see if number of traverse is possible or not
     const currentPositionId = getCoinCurrentPosition(coinId);
 
-    if (isForward) {
-        const maxForwardPathTraverseValue = pathToTraverse[color].length
-        if (currentPositionId == coinId) {
-            if (numberOfTraverse > maxForwardPathTraverseValue) {
-                alert("Impossible move forward 1")
-                return;
-            }
-        } else {
-            const currentPositionIndex = pathToTraverse[color].findIndex(elem => elem == currentPositionId);
-            if (numberOfTraverse > maxForwardPathTraverseValue - currentPositionIndex) {
-                alert("Impossible move forward 2")
-                return;
-            }
-        }
-    } else {
-        const maxForwardPathTraverseValue = reversePathTraverse[color].length
-        if (currentPositionId == coinId) {
-            if (numberOfTraverse > maxForwardPathTraverseValue) {
-                alert("Impossible move backward 1")
-                return;
-            }
-        } else {
-            const currentPositionIndex = reversePathTraverse[color].findIndex(elem => elem == currentPositionId);
-            if (numberOfTraverse > maxForwardPathTraverseValue - currentPositionIndex) {
-                alert("Impossible move backward 2")
-                return;
-            }
-        }
-    }
+    // if (isForward) {
+    //     const maxForwardPathTraverseValue = pathToTraverse[color].length
+    //     if (currentPositionId == coinId) {
+    //         if (numberOfTraverse > maxForwardPathTraverseValue) {
+    //             alert("Impossible move forward 1")
+    //             return;
+    //         }
+    //     }
+    //      else {
+    //         const currentPositionIndex = pathToTraverse[color].findIndex(elem => elem == currentPositionId);
+    //         if (numberOfTraverse > maxForwardPathTraverseValue - currentPositionIndex) {
+    //             alert("Impossible move forward 2")
+    //             return;
+    //         }
+    //     }
+    // }
+    // else {
+    //     const maxForwardPathTraverseValue = reversePathTraverse[color].length
+    //     if (currentPositionId == coinId) {
+    //         if (numberOfTraverse > maxForwardPathTraverseValue) {
+    //             alert("Impossible move backward 1")
+    //             return;
+    //         }
+    //     } else {
+    //         const currentPositionIndex = reversePathTraverse[color].findIndex(elem => elem == currentPositionId);
+    //         if (numberOfTraverse > maxForwardPathTraverseValue - currentPositionIndex) {
+    //             alert("Impossible move backward 2")
+    //             return;
+    //         }
+    //     }
+    // }
 
 
     // move it now
@@ -785,23 +791,15 @@ function moveCoin(coinId, numberOfTraverse, isForward = true, callNextPlayerTurn
     // find current position of coin
 
     let interval = setInterval(function () {
-        console.log("movementCount **** ", movementCount)
-        console.log("score **** ", currentPlayer.score)
-        console.log("numberOfTraverse **** ", numberOfTraverse)
         if (movementCount + 1 >= numberOfTraverse) {
-            clearInterval(interval);
-            console.log("move **** ", movementCount, "completed")
-            console.log("callNextPlayerTurn ********** ", callNextPlayerTurn)
+            clearInterval(interval)
             if (callNextPlayerTurn) {
                 if (numberOfTraverse != diceVal.six) {
-                    console.log("callNextPlayerTurn 1 ********** 1")
                     nextPlayerTurn();
                 } else {
-                    console.log("callNextPlayerTurn 2 ********** 2")
                     startFingerBlinking();
                 }
             } else {
-                console.log("callNextPlayerTurn 3 ********** 3")
                 setBlink();
             }
         }
@@ -857,7 +855,10 @@ function drawCoin(coinId, pathBlockId, isForward, isLastMovement = false) {
     if (isLastMovement && !checkIfPathIsSafe(pathBlockId) && (checkIfCoinPathBlockIsOccupied(pathBlockId) != null)) {
         //path block is occupied by another coin, cut it
         const otherCoinId = checkIfCoinPathBlockIsOccupied(pathBlockId);
-        if (otherCoinId != null) {
+        if(otherCoinId != null){
+            console.log(isSameColor(coinId, otherCoinId))
+        }
+        if (otherCoinId != null && !isSameColor(coinId, otherCoinId)) {
             //marking coin as in after cut
             const player = players.find(player => player.color == color);
             player.coin_in.push(coinId);
@@ -943,33 +944,6 @@ function drawCoin(coinId, pathBlockId, isForward, isLastMovement = false) {
         player.coin_in.push(coinId)
         document.getElementById(coinId).classList.add(`${color}-coins`);
     }
-    console.log("players ******* ", players)
-}
-
-// function to check if same color coins sits on same path block
-function isSameColorOccupiesPathBlock(coinId, pathBlockId) {
-    let count = 0;
-    if (!pathBlockId || !pathBlockId.startsWith("h_id") || !pathBlockId.startsWith("v_id")) {
-        return count;
-    }
-    console.log("same color check ***** start");
-    console.log("coinId ******** ", coinId);
-    const color = getColorFromCoinId(coinId);
-    const allColorCoinsId = [`${color}-coins-1`, `${color}-coins-2`, `${color}-coins-3`, `${color}-coins-4`];
-
-    const coinPosition = getCoinCurrentPosition(coinId);
-    console.log("coinPosition ******** ", coinPosition);
-    for (let colorCoinId of allColorCoinsId) {
-        if (colorCoinId != coinId) {
-            const colorCoinPosition = getCoinCurrentPosition(colorCoinId);
-            console.log("inside loop ******** colorCoinId", colorCoinId, "colorCoinPosition ", colorCoinPosition, "check **** ", coinPosition, colorCoinPosition, coinPosition == colorCoinPosition);
-            if (coinPosition && colorCoinPosition && coinPosition == colorCoinPosition) {
-                count++;
-            }
-        }
-    }
-    console.log("count ******* ", count);
-    return count;
 }
 
 // function to check if same color coins sits on previous path block
@@ -1047,11 +1021,16 @@ function getBstClassName(blackStar) {
 //to replace coins
 function toCutCoins(coinId) {
     const color = getColorFromCoinId(coinId);
-    if (!players.find(player => player.color == color).coin_out.includes(coinId)) {
-        throw new Error(`${coinId} coin is not out`);
-    }
+    // if (!players.find(player => player.color == color).coin_out.includes(coinId)) {
+    //     throw new Error(`${coinId} coin is not out`);
+    // }
     const currentPositionId = players.find(player => player.color == color).coin_position[coinId];
     const currentPositionIdIndex = reversePathTraverse[color].findIndex(elem => elem == currentPositionId);
-    const numberOfTraverse = reversePathTraverse[color].length - currentPositionIdIndex + 1;
+    const numberOfTraverse = reversePathTraverse[color].length - currentPositionIdIndex;
     moveCoin(coinId, numberOfTraverse, false);
+}
+
+//function to check if two coinId belongs to same color
+function isSameColor(coinId, otherCoinId) {
+    return coinId.split("-").splice(0, 2).join("-") == otherCoinId.split("-").splice(0, 2).join("-")
 }
