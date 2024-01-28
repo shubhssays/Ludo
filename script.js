@@ -76,7 +76,7 @@ const idPrependHorizontal = "h_id_";
 const idPrependVertical = "v_id_";
 const idAppendOne = "_1";
 const idAppendTwo = "_2";
-const rollForSeconds = 2;
+const rollForSeconds = 1;
 const rollIntervalLapse = 120;
 const coinForwardMovementFrequency = 500;
 const coinBackwardMovementFrequency = 100;
@@ -203,11 +203,9 @@ for (let star of [...blackStars, ...colorSafeStars]) {
                 }
                 let colorCount = {};
                 for (let c = 0; c < blackStarPathBlock.childNodes.length; c++) {
-                    console.log("mutation *** c", c)
                     const childNode = blackStarPathBlock.childNodes[c];
                     const childNodeClassList = childNode.classList.value.toString().
                         split(" ");
-                    console.log("childNode *** ", childNode, "childNodeClassList *** ", childNodeClassList);
                     for (let cl of childNodeClassList) {
                         console.log("colorCount *** ", colorCount);
                         if (cl.includes("-coins") && !cl.includes("-star")) {
@@ -255,6 +253,8 @@ document.querySelectorAll('.path-block').forEach(elem => {
     });
 });
 
+const getRandomNumber = (min, max) => Math.floor(Math.random() * (max - min + 1)) + min;
+
 //Handling roll Dice Button click handler
 function handleDiceRoll(dice) {
     dice.classList.add(disabledClass);
@@ -268,7 +268,7 @@ function handleDiceRoll(dice) {
     const totalIteration = rollForSeconds * 1000;
     dice.classList.add('dice-rolling');
     let interval = setInterval(function () {
-        score = Math.floor(Math.random() * 2) + 5;//Math.floor(Math.random() * 6) + 5;
+        score = getRandomNumber(1, 6);
         dice.style.backgroundImage = `url('./assets/dice-${score}-${currentPlayer.color}.png')`;
         iteration = iteration + rollIntervalLapse;
         if (iteration >= totalIteration) {
@@ -322,15 +322,12 @@ function nextPlayerTurn() {
         return;
     }
 
-    console.log("nextPlayerTurn called")
-    console.log("currentPlayer before *** ", currentPlayer);
     const playersLength = players.length;
     const currentPlayerIndex = players.findIndex(player => player.inputId == currentPlayer.inputId);
     if (currentPlayerIndex == -1) {
         fixError()
         return;
     }
-    console.log("currentPlayerIndex *** ", currentPlayerIndex);
 
     if (currentPlayerIndex < playersLength - 1) {
         currentPlayer = players[currentPlayerIndex + 1];
@@ -518,6 +515,7 @@ function validateAndSaveConfiguration() {
                         [`${color}-coins-3`]: null,
                         [`${color}-coins-4`]: null,
                     },
+                    rank: null,
                 };
                 document.getElementById(`${color}-player-name`).innerText = inputPlayerName
                 selectedPlayers.push(playerObj);
@@ -751,7 +749,7 @@ function moveCoin(coinId, numberOfTraverse, isForward = true, callNextPlayerTurn
     const color = getColorFromCoinId(coinId);
 
     // adding check to see if number of traverse is possible or not
-    const currentPositionId = getCoinCurrentPosition(coinId);
+    // const currentPositionId = getCoinCurrentPosition(coinId);
 
     // if (isForward) {
     //     const maxForwardPathTraverseValue = pathToTraverse[color].length
@@ -855,7 +853,7 @@ function drawCoin(coinId, pathBlockId, isForward, isLastMovement = false) {
     if (isLastMovement && !checkIfPathIsSafe(pathBlockId) && (checkIfCoinPathBlockIsOccupied(pathBlockId) != null)) {
         //path block is occupied by another coin, cut it
         const otherCoinId = checkIfCoinPathBlockIsOccupied(pathBlockId);
-        if(otherCoinId != null){
+        if (otherCoinId != null) {
             console.log(isSameColor(coinId, otherCoinId))
         }
         if (otherCoinId != null && !isSameColor(coinId, otherCoinId)) {
@@ -936,6 +934,7 @@ function drawCoin(coinId, pathBlockId, isForward, isLastMovement = false) {
         const div = document.createElement("div");
         div.classList = `${color}-coins`;
         document.getElementById(`hch-${color}`).appendChild(div);
+        isGameCompleted();
     } else if (isHome == -1) {
         const player = players.find(player => player.color == color);
         const indexToRemove = player.coin_out.indexOf(coinId);
@@ -962,6 +961,7 @@ function isSameColorOccupiesSamePathBlock(coinId, coinPosition) {
     }
     return count;
 }
+
 //function to get current position of coin
 function getCoinCurrentPosition(coinId) {
     const color = getColorFromCoinId(coinId);
@@ -1021,16 +1021,58 @@ function getBstClassName(blackStar) {
 //to replace coins
 function toCutCoins(coinId) {
     const color = getColorFromCoinId(coinId);
-    // if (!players.find(player => player.color == color).coin_out.includes(coinId)) {
-    //     throw new Error(`${coinId} coin is not out`);
-    // }
+    if (!players.find(player => player.color == color).coin_out.includes(coinId)) {
+        throw new Error(`${coinId} coin is not out`);
+    }
     const currentPositionId = players.find(player => player.color == color).coin_position[coinId];
     const currentPositionIdIndex = reversePathTraverse[color].findIndex(elem => elem == currentPositionId);
     const numberOfTraverse = reversePathTraverse[color].length - currentPositionIdIndex;
-    moveCoin(coinId, numberOfTraverse, false);
+    moveCoin(coinId, numberOfTraverse, false, false);
 }
 
 //function to check if two coinId belongs to same color
 function isSameColor(coinId, otherCoinId) {
     return coinId.split("-").splice(0, 2).join("-") == otherCoinId.split("-").splice(0, 2).join("-")
 }
+
+//function to check if game is completed
+function isGameCompleted() {
+    let msg = ""
+    let numOfPlayerWhoseGameIsCompleted = 0;
+    let completed = false;
+
+    for (let player of players) {
+        if (player.rank != null && player.coin_home.length == 4) {
+            const maxAvailableRank = findNextRank();
+            player.rank = maxAvailableRank;
+            numOfPlayerWhoseGameIsCompleted++;
+        }
+
+        if (numOfPlayerWhoseGameIsCompleted >= 3) {
+            completed = true
+            break
+        }
+    }
+
+    if (completed) {
+        players = players.sort((a, b) => a.rank - b.rank);
+        for (let player of players) {
+            msg += `Rank ${player.rank || 0} ==> ${player.inputPlayerName} \n`
+        }
+        alert(msg);
+        location.reload();
+    }
+}
+
+
+function findNextRank() {
+    let rank = 1;
+    for (let player of players) {
+        if (player.rank != null && rank <= Number(player.rank)) {
+            rank = Number(player.rank) + 1;
+        }
+    }
+    return rank;
+}
+
+
