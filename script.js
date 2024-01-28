@@ -751,22 +751,22 @@ function moveCoin(coinId, numberOfTraverse, isForward = true, callNextPlayerTurn
     // adding check to see if number of traverse is possible or not
     // const currentPositionId = getCoinCurrentPosition(coinId);
 
-    // if (isForward) {
-    //     const maxForwardPathTraverseValue = pathToTraverse[color].length
-    //     if (currentPositionId == coinId) {
-    //         if (numberOfTraverse > maxForwardPathTraverseValue) {
-    //             alert("Impossible move forward 1")
-    //             return;
-    //         }
-    //     }
-    //      else {
-    //         const currentPositionIndex = pathToTraverse[color].findIndex(elem => elem == currentPositionId);
-    //         if (numberOfTraverse > maxForwardPathTraverseValue - currentPositionIndex) {
-    //             alert("Impossible move forward 2")
-    //             return;
-    //         }
-    //     }
-    // }
+    if (isForward) {
+        const maxForwardPathTraverseValue = pathToTraverse[color].length
+        if (currentPositionId == coinId) {
+            if (numberOfTraverse > maxForwardPathTraverseValue) {
+                alert("Impossible move forward 1")
+                return;
+            }
+        }
+        else {
+            const currentPositionIndex = pathToTraverse[color].findIndex(elem => elem == currentPositionId);
+            if (numberOfTraverse > maxForwardPathTraverseValue - currentPositionIndex) {
+                alert("Impossible move forward 2")
+                return;
+            }
+        }
+    }
     // else {
     //     const maxForwardPathTraverseValue = reversePathTraverse[color].length
     //     if (currentPositionId == coinId) {
@@ -1020,10 +1020,6 @@ function getBstClassName(blackStar) {
 
 //to replace coins
 function toCutCoins(coinId) {
-    const color = getColorFromCoinId(coinId);
-    if (!players.find(player => player.color == color).coin_out.includes(coinId)) {
-        throw new Error(`${coinId} coin is not out`);
-    }
     const currentPositionId = players.find(player => player.color == color).coin_position[coinId];
     const currentPositionIdIndex = reversePathTraverse[color].findIndex(elem => elem == currentPositionId);
     const numberOfTraverse = reversePathTraverse[color].length - currentPositionIdIndex;
