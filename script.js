@@ -89,6 +89,7 @@ let players = [];
 let currentPlayer;
 let currentChance;
 let currentPlayerDiceScore = [];
+let isCoinCut = false;
 
 hideHomeCoinsHolder();
 
@@ -786,7 +787,14 @@ function moveCoin(coinId, numberOfTraverse, isForward = true, callNextPlayerTurn
 
     let interval = setInterval(function () {
         if (movementCount >= numberOfTraverse) {
-            clearInterval(interval)
+            if (interval) {
+                clearInterval(interval)
+            }
+
+            if (isCoinCut) {
+                isCoinCut = false;
+            }
+
             if (callNextPlayerTurn) {
                 if (numberOfTraverse != diceVal.six) {
                     nextPlayerTurn();
@@ -815,7 +823,7 @@ function moveCoin(coinId, numberOfTraverse, isForward = true, callNextPlayerTurn
             }
             pathBlockId = pathToTraverse[color][positionIndex];
             console.log("isLastMovement **** ", movementCount, numberOfTraverse, movementCount >= numberOfTraverse)
-            drawCoin(coinId, pathBlockId, isForward, movementCount+1 >= numberOfTraverse);
+            drawCoin(coinId, pathBlockId, isForward, movementCount + 1 >= numberOfTraverse);
             movementCount++
         }
 
@@ -926,9 +934,9 @@ function drawCoin(coinId, pathBlockId, isForward, isLastMovement = false) {
     }
 
     const otherCoinId = checkIfCoinPathBlockIsOccupied(pathBlockId, coinId);
-    console.log("coinCutCheck ********* ", isLastMovement, !checkIfPathIsSafe(pathBlockId), otherCoinId != null, !isSameColor(coinId, otherCoinId))
+    console.log("coinCutCheck ********* ", !isCoinCut, isLastMovement, !checkIfPathIsSafe(pathBlockId), otherCoinId != null, !isSameColor(coinId, otherCoinId))
     //checking if another coin is present in the same place
-    if (isLastMovement && !checkIfPathIsSafe(pathBlockId) && otherCoinId != null && !isSameColor(coinId, otherCoinId)) {
+    if (!isCoinCut && isLastMovement && !checkIfPathIsSafe(pathBlockId) && otherCoinId != null && !isSameColor(coinId, otherCoinId)) {
         //path block is occupied by another coin, cut it
         //marking coin as in after cut
         const player = players.find(player => player.color == color);
@@ -1014,10 +1022,16 @@ function getBstClassName(blackStar) {
 
 //to replace coins
 function toCutCoins(coinId) {
+    console.log("toCutCoins ******** ", coinId, currentPlayer)
+    if (isCoinCut) {
+        console.log("coin_cut error");
+        return;
+    }
     const color = getColorFromCoinId(coinId);
     const currentPositionId = players.find(player => player.color == color).coin_position[coinId];
     const currentPositionIdIndex = reversePathTraverse[color].findIndex(elem => elem == currentPositionId);
     const numberOfTraverse = reversePathTraverse[color].length - currentPositionIdIndex;
+    isCoinCut = true;
     moveCoin(coinId, numberOfTraverse, false, false);
 }
 
