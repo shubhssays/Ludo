@@ -293,7 +293,10 @@ function handlerPlayerChance() {
     const score = parseInt(player.score);
     const coins = `${color}-coins`;
 
-    let action;
+    if (score != 0) {
+        console.log("handlerPlayerChance ERRORRRRRRRRRRRRRRRRRRRRRRR")
+        return;
+    }
 
     //no coin is out
     if (player.coin_out.length < 1) {
@@ -525,7 +528,7 @@ function validateAndSaveConfiguration() {
 
                 // click listener on color-coins
                 document.querySelectorAll(`.${color}-coins`).forEach(elem => {
-                    elem.addEventListener('click', event => {
+                    elem.addEventListener('click', async event => {
                         const score = currentPlayer.score || 0;
                         if (score < 1) {
                             console.log("score is less than 1")
@@ -544,7 +547,7 @@ function validateAndSaveConfiguration() {
                             console.log("not your chance or coin is inside")
                             return;
                         }
-                        executeCoinMovement(coinId)
+                        await executeCoinMovement(coinId)
                     });
                 });
             }
@@ -604,7 +607,7 @@ function setBlink() {
 }
 
 // function to make coins move
-function executeCoinMovement(coinId) {
+async function executeCoinMovement(coinId) {
     const score = currentPlayer.score;
     currentPlayer.score = 0;
     const coin_in = currentPlayer.coin_in;
@@ -626,12 +629,12 @@ function executeCoinMovement(coinId) {
         player.coin_in.splice(indexToRemove, 1);
         player.coin_out.push(coinId);
 
-        // coin is inside and player scored 6
-        moveCoin(coinId, 1, true, false);
         stopFingerBlinking();
+        // coin is inside and player scored 6
+        await moveCoin(coinId, 1, true, false);
     } else if (coin_out.includes(coinId)) {
         const numberOfTraverse = score;
-        moveCoin(coinId, numberOfTraverse, true, true);
+        await moveCoin(coinId, numberOfTraverse, true, true);
     } else {
         fixError()
         return;
@@ -640,6 +643,9 @@ function executeCoinMovement(coinId) {
 
 // function to check how many coins are present at any given path block
 function checkIfCoinPathBlockIsOccupied(pathBlockId, _coinId) {
+    if(!pathBlockId){
+        return
+    }
     const _color = getColorFromCoinId(_coinId);
     for (let player of players) {
         // if (player.inputId != currentPlayer.inputId) {
@@ -741,7 +747,7 @@ function stopColorBoxBlinking() {
 }
 
 // function to move coin from one position to another
-function moveCoin(coinId, numberOfTraverse, isForward = true, callNextPlayerTurn = false) {
+async function moveCoin(coinId, numberOfTraverse, isForward = true, callNextPlayerTurn = false) {
     if (currentGameStatus != gameStatus.RUNNING) {
         alert("Game is not running");
         return;
@@ -774,52 +780,45 @@ function moveCoin(coinId, numberOfTraverse, isForward = true, callNextPlayerTurn
     // move it now
     let movementCount = 0;
 
-    let interval = setInterval(function () {
-        if (movementCount >= numberOfTraverse) {
-            if (interval) {
-                clearInterval(interval)
+    for (let i = 0; i < numberOfTraverse; i++) {
+        let pathBlockId;
+        // find current position of coin
+        let coinCurrentPositionId = getCoinCurrentPosition(coinId);
+        if (coinCurrentPositionId == coinId) {
+            positionIndex = 0;
+        } else {
+            if (typeof positionIndex != "undefined") {
+                positionIndex = pathToTraverse[color].findIndex(elem => elem == coinCurrentPositionId);
             }
-
-            if (callNextPlayerTurn) {
-                if (numberOfTraverse != diceVal.six) {
-                    nextPlayerTurn();
-                } else {
-                    startFingerBlinking();
-                }
+        }
+        if (coinCurrentPositionId != coinId) {
+            if (isForward) {
+                positionIndex = positionIndex + 1;
             } else {
-                if (playerWhoseIsCuttingAnother != null) {
-                    currentPlayer = playerWhoseIsCuttingAnother;
-                    playerWhoseIsCuttingAnother = null;
-                }
-                setBlink();
+                positionIndex = positionIndex - 1;
+            }
+        }
+        pathBlockId = pathToTraverse[color][positionIndex];
+        console.log("isLastMovement **** ", movementCount, numberOfTraverse, i, i == numberOfTraverse - 1)
+        await drawCoin(coinId, pathBlockId, isForward, i == numberOfTraverse - 1);
+        await sleep(motionFrequency);
+    }
+
+    if (movementCount >= numberOfTraverse) {
+        if (callNextPlayerTurn) {
+            if (numberOfTraverse != diceVal.six) {
+                nextPlayerTurn();
+            } else {
+                startFingerBlinking();
             }
         } else {
-            let pathBlockId;
-            // find current position of coin
-            let coinCurrentPositionId = getCoinCurrentPosition(coinId);
-            if (coinCurrentPositionId == coinId) {
-                positionIndex = 0;
-            } else {
-                if (typeof positionIndex != "undefined") {
-                    positionIndex = pathToTraverse[color].findIndex(elem => elem == coinCurrentPositionId);
-                }
+            if (playerWhoseIsCuttingAnother != null) {
+                currentPlayer = playerWhoseIsCuttingAnother;
+                playerWhoseIsCuttingAnother = null;
             }
-            if (coinCurrentPositionId != coinId) {
-                if (isForward) {
-                    positionIndex = positionIndex + 1;
-                } else {
-                    positionIndex = positionIndex - 1;
-                }
-            }
-            pathBlockId = pathToTraverse[color][positionIndex];
-            console.log("isLastMovement **** ", movementCount, numberOfTraverse, movementCount >= numberOfTraverse)
-            drawCoin(coinId, pathBlockId, isForward, movementCount + 1 >= numberOfTraverse);
-            movementCount++
+            setBlink();
         }
-
-    }, motionFrequency);
-
-    //update the coin details in player array
+    }
 }
 
 // function to get color from coinId
@@ -829,7 +828,7 @@ function getColorFromCoinId(coinId) {
 }
 
 // function to draw coin on board
-function drawCoin(coinId, pathBlockId, isForward, isLastMovement = false) {
+async function drawCoin(coinId, pathBlockId, isForward, isLastMovement = false) {
     const color = getColorFromCoinId(coinId);
     const pathBlock = document.getElementById(pathBlockId);
 
@@ -928,15 +927,10 @@ function drawCoin(coinId, pathBlockId, isForward, isLastMovement = false) {
     //checking if another coin is present in the same place
     if (isLastMovement && !checkIfPathIsSafe(pathBlockId) && otherCoinId != null && !isSameColor(coinId, otherCoinId)) {
         //path block is occupied by another coin, cut it
-        //marking coin as in after cut
-        // const player = players.find(player => player.color == color);
-        // player.coin_in.push(coinId);
-        // const indexToRemove = player.coin_out.indexOf(coinId);
-        // player.coin_out.splice(indexToRemove, 1);
         if (isCoinCut == 0) {
             playerWhoseIsCuttingAnother = players.find(player => player.color == color);
             isCoinCut = 1
-            toCutCoins(otherCoinId);
+            await toCutCoins(otherCoinId, coinId);
         } else {
             isCoinCut = 0;
         }
@@ -1017,8 +1011,8 @@ function getBstClassName(blackStar) {
 }
 
 //to replace coins
-function toCutCoins(coinId) {
-    console.log("toCutCoins ******** ", coinId, currentPlayer)
+async function toCutCoins(coinId, _coinId) {
+    console.log("toCutCoins ******** ", coinId, currentPlayer, "\n ","_coinId &******** ",_coinId)
     if (isCoinCut == 0) {
         console.log("coin_cut error");
         return;
@@ -1027,7 +1021,7 @@ function toCutCoins(coinId) {
     const currentPositionId = players.find(player => player.color == color).coin_position[coinId];
     const currentPositionIdIndex = reversePathTraverse[color].findIndex(elem => elem == currentPositionId);
     const numberOfTraverse = reversePathTraverse[color].length - currentPositionIdIndex;
-    moveCoin(coinId, numberOfTraverse, false, false);
+    await moveCoin(coinId, numberOfTraverse, false, false);
 }
 
 //function to check if two coinId belongs to same color
