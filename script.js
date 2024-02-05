@@ -293,11 +293,6 @@ function handlerPlayerChance() {
     const score = parseInt(player.score);
     const coins = `${color}-coins`;
 
-    if (score != 0) {
-        console.log("handlerPlayerChance ERRORRRRRRRRRRRRRRRRRRRRRRR")
-        return;
-    }
-
     //no coin is out
     if (player.coin_out.length < 1) {
         //checking if score is 6 then, highlight the coins
@@ -531,7 +526,7 @@ function validateAndSaveConfiguration() {
                     elem.addEventListener('click', async event => {
                         const score = currentPlayer.score || 0;
                         if (score < 1) {
-                            console.log("score is less than 1")
+                            // console.log("score is less than 1")
                             return;
                         }
                         const coinId = event.target.id;
@@ -544,7 +539,7 @@ function validateAndSaveConfiguration() {
                         const coin_out = currentPlayer.coin_out || [];
 
                         if (!coin_out.includes(coinId) && !(score == diceVal.six && coin_in.includes(coinId))) {
-                            console.log("not your chance or coin is inside")
+                            // console.log("not your chance or coin is inside")
                             return;
                         }
                         await executeCoinMovement(coinId)
@@ -628,6 +623,8 @@ async function executeCoinMovement(coinId) {
         const indexToRemove = player.coin_in.indexOf(coinId);
         player.coin_in.splice(indexToRemove, 1);
         player.coin_out.push(coinId);
+        player.coin_in = getUniqueArray(player.coin_in);
+        player.coin_out = getUniqueArray(player.coin_out);
 
         stopFingerBlinking();
         // coin is inside and player scored 6
@@ -643,19 +640,17 @@ async function executeCoinMovement(coinId) {
 
 // function to check how many coins are present at any given path block
 function checkIfCoinPathBlockIsOccupied(pathBlockId, _coinId) {
-    if(!pathBlockId){
+    if (!pathBlockId) {
         return
     }
     const _color = getColorFromCoinId(_coinId);
     for (let player of players) {
-        // if (player.inputId != currentPlayer.inputId) {
         const coin_position = player.coin_position;
         for (let coinId in coin_position) {
             if (getColorFromCoinId(coinId) != _color && coin_position[coinId] == pathBlockId) {
                 return coinId;
             }
         }
-        // }
     }
     return null;
 }
@@ -799,7 +794,6 @@ async function moveCoin(coinId, numberOfTraverse, isForward = true, callNextPlay
             }
         }
         pathBlockId = pathToTraverse[color][positionIndex];
-        console.log("isLastMovement **** ", movementCount, numberOfTraverse, i, i == numberOfTraverse - 1)
         await drawCoin(coinId, pathBlockId, isForward, i == numberOfTraverse - 1);
         await sleep(motionFrequency);
     }
@@ -909,6 +903,8 @@ async function drawCoin(coinId, pathBlockId, isForward, isLastMovement = false) 
         player.coin_out.splice(indexToRemove, 1);
         player.coin_position[coinId] = null;
         player.coin_home.push(coinId);
+        player.coin_out = getUniqueArray(player.coin_out);
+        player.coin_home = getUniqueArray(player.coin_home);
         const div = document.createElement("div");
         div.classList = `${color}-coins`;
         document.getElementById(`hch-${color}`).appendChild(div);
@@ -918,12 +914,13 @@ async function drawCoin(coinId, pathBlockId, isForward, isLastMovement = false) 
         const indexToRemove = player.coin_out.indexOf(coinId);
         player.coin_out.splice(indexToRemove, 1);
         player.coin_position[coinId] = null;
-        player.coin_in.push(coinId)
+        player.coin_in.push(coinId);
+        player.coin_out = getUniqueArray(player.coin_out);
+        player.coin_in = getUniqueArray(player.coin_in);
         document.getElementById(coinId).classList.add(`${color}-coins`);
     }
 
     const otherCoinId = checkIfCoinPathBlockIsOccupied(pathBlockId, coinId);
-    console.log("coinCutCheck ********* ", isCoinCut == 0, isLastMovement, !checkIfPathIsSafe(pathBlockId), otherCoinId != null, !isSameColor(coinId, otherCoinId))
     //checking if another coin is present in the same place
     if (isLastMovement && !checkIfPathIsSafe(pathBlockId) && otherCoinId != null && !isSameColor(coinId, otherCoinId)) {
         //path block is occupied by another coin, cut it
@@ -1012,7 +1009,7 @@ function getBstClassName(blackStar) {
 
 //to replace coins
 async function toCutCoins(coinId, _coinId) {
-    console.log("toCutCoins ******** ", coinId, currentPlayer, "\n ","_coinId &******** ",_coinId)
+    console.log("toCutCoins ******** ", coinId, currentPlayer, "\n ", "_coinId &******** ", _coinId)
     if (isCoinCut == 0) {
         console.log("coin_cut error");
         return;
@@ -1072,6 +1069,11 @@ function findNextRank() {
 //function to pause the code execution
 async function sleep(msec) {
     return new Promise(resolve => setTimeout(resolve, msec));
+}
+
+// function to convert array to unique array
+function getUniqueArray(arr) {
+    return Array.from(new Set(arr));
 }
 
 
