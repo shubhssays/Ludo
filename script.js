@@ -257,6 +257,9 @@ const getRandomNumber = (min, max) => Math.floor(Math.random() * (max - min + 1)
 
 //Handling roll Dice Button click handler
 function handleDiceRoll(dice) {
+    if (Number(currentPlayer?.score || 0) > 0) {
+        return;
+    }
     dice.classList.add(disabledClass);
     dice.disabled = true;
     if (isDiceRollingNow) {
@@ -1061,7 +1064,7 @@ function isGameCompleted() {
     }
 }
 
-
+//function to find next rank
 function findNextRank() {
     let rank = 1;
     for (let player of players) {
@@ -1070,6 +1073,11 @@ function findNextRank() {
         }
     }
     return rank;
+}
+
+//function to pause the code execution
+async function sleep(msec) {
+    return new Promise(resolve => setTimeout(resolve, msec));
 }
 
 
