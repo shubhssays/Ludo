@@ -268,7 +268,7 @@ function handleDiceRoll(dice) {
     const totalIteration = rollForSeconds * 1000;
     dice.classList.add('dice-rolling');
     let interval = setInterval(function () {
-        score = getRandomNumber(1, 6);
+        score = getRandomNumber(5, 6);
         dice.style.backgroundImage = `url('./assets/dice-${score}-${currentPlayer.color}.png')`;
         iteration = iteration + rollIntervalLapse;
         if (iteration >= totalIteration) {
@@ -600,7 +600,6 @@ function setBlink() {
 // function to make coins move
 async function executeCoinMovement(coinId) {
     const score = currentPlayer.score;
-    currentPlayer.score = 0;
     const coin_in = currentPlayer.coin_in;
     const coin_out = currentPlayer.coin_out;
     const color = currentPlayer.color;
@@ -765,8 +764,11 @@ async function moveCoin(coinId, numberOfTraverse, isForward = true, score) {
         }
     }
 
-     // stop coin rotation
-     stopCoinRotation();
+    // stop coin rotation
+    stopCoinRotation();
+
+    //marking current player score as zero
+    currentPlayer.score = 0;
 
     // move it now
     for (let i = 0; i < numberOfTraverse; i++) {
