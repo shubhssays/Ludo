@@ -605,9 +605,6 @@ async function executeCoinMovement(coinId) {
     const coin_out = currentPlayer.coin_out;
     const color = currentPlayer.color;
 
-    // stop coin rotation
-    stopCoinRotation();
-
     //coin is inside
     if (coin_in.includes(coinId)) {
         if (score != diceVal.six) {
@@ -739,7 +736,6 @@ function stopColorBoxBlinking() {
 
 // function to move coin from one position to another
 async function moveCoin(coinId, numberOfTraverse, isForward = true, score) {
-    let callNextPlayerTurn = false;
     if (currentGameStatus != gameStatus.RUNNING) {
         alert("Game is not running");
         return;
@@ -769,7 +765,8 @@ async function moveCoin(coinId, numberOfTraverse, isForward = true, score) {
         }
     }
 
-    let isCoinCutAllowedBool = false;
+     // stop coin rotation
+     stopCoinRotation();
 
     // move it now
     for (let i = 0; i < numberOfTraverse; i++) {
@@ -918,10 +915,10 @@ async function drawCoin(coinId, pathBlockId, isForward, isLastMovement, score, n
         if (isCoinCutAllowedBool) {
             //path block is occupied by another coin, cut it
             // if (isCoinCut == 0) {
-                playerWhoseIsCuttingAnother = players.find(player => player.color == color);
-                // isCoinCut = 1
-                await toCutCoins(otherCoinId, coinId);
-                // isCoinCut = 0;
+            playerWhoseIsCuttingAnother = players.find(player => player.color == color);
+            // isCoinCut = 1
+            await toCutCoins(otherCoinId, coinId);
+            // isCoinCut = 0;
             // }
         };
 
