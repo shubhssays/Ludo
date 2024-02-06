@@ -268,7 +268,7 @@ function handleDiceRoll(dice) {
     const totalIteration = rollForSeconds * 1000;
     dice.classList.add('dice-rolling');
     let interval = setInterval(function () {
-        score = getRandomNumber(5, 6);
+        score = getRandomNumber(1, 6);
         dice.style.backgroundImage = `url('./assets/dice-${score}-${currentPlayer.color}.png')`;
         iteration = iteration + rollIntervalLapse;
         if (iteration >= totalIteration) {
