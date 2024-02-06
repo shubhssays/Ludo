@@ -257,6 +257,10 @@ const getRandomNumber = (min, max) => Math.floor(Math.random() * (max - min + 1)
 
 //Handling roll Dice Button click handler
 function handleDiceRoll(dice) {
+    if (Number(currentPlayer?.score || 0) > 0) {
+        alert("move the coins first");
+        return;
+    }
     dice.classList.add(disabledClass);
     dice.disabled = true;
     if (isDiceRollingNow) {
@@ -296,6 +300,7 @@ function handlerPlayerChance() {
         if (score == diceVal.six) {
             startCoinRotation(coins);
         } else {
+            currentPlayer.score = 0;
             setTimeout(function () {
                 nextPlayerTurn()
             }, secondsToWaitForAnotherChance * 1000)
@@ -945,10 +950,8 @@ async function drawCoin(coinId, pathBlockId, isForward, isLastMovement, score, n
 function isCoinCutAllowed(pathBlockId, coinId) {
     const otherCoinId = checkIfCoinPathBlockIsOccupied(pathBlockId, coinId);
     if (!checkIfPathIsSafe(pathBlockId) && otherCoinId != null && !isSameColor(coinId, otherCoinId)) {
-        console.log("isCoinCutAllowed **** ", pathBlockId, coinId, true)
         return true;
     }
-    console.log("isCoinCutAllowed **** ", pathBlockId, coinId, false)
     return false;
 }
 
