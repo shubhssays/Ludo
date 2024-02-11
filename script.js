@@ -17,6 +17,7 @@ const playerOneInput = document.getElementById("player-one");
 const playerTwoInput = document.getElementById("player-two");
 const playerThreeInput = document.getElementById("player-three");
 const playerFourInput = document.getElementById("player-four");
+let coinsThatCanMove = []
 
 // game constants
 const gameStatus = {
@@ -90,7 +91,7 @@ let currentPlayer;
 let currentChance;
 let currentPlayerDiceScore = [];
 let isCoinCut = 0;
-let playerWhoseIsCuttingAnother = null;
+let playerWhoseChanceShouldBeRepeated = null;
 
 hideHomeCoinsHolder();
 
@@ -282,6 +283,7 @@ function handleDiceRoll(dice) {
             dice.classList.remove(disabledClass);
             isDiceRollingNow = false;
             currentPlayer.score = parseInt(score);
+            console.log("last score ******* ", score)
             handlerPlayerChance();
         }
     }, rollIntervalLapse);
@@ -294,23 +296,32 @@ function handlerPlayerChance() {
     const score = parseInt(player.score);
     const coins = `${color}-coins`;
 
-    //no coin is out
-    if (player.coin_out.length < 1) {
-        //checking if score is 6 then, highlight the coins
-        if (score == diceVal.six) {
-            startCoinRotation(coins);
-        } else {
-            currentPlayer.score = 0;
-            setTimeout(function () {
-                nextPlayerTurn()
-            }, secondsToWaitForAnotherChance * 1000)
+    coinsThatCanMove = findCoinsThatCanMove();
+    console.log("coinsThatCanMove *** ", currentPlayer.color, " *** ", coinsThatCanMove)
+    if (coinsThatCanMove.length < 1) {
+        // no coin is out
+        if (player.coin_out.length < 1) {
+            //checking if score is 6 then, highlight the coins
+            if (score == diceVal.six) {
+                startCoinRotation(coins);
+                return;
+            }
         }
-    } else if (player.coin_out.length > 0) {
-        if (score == diceVal.six) {
-            startCoinRotation(coins);
-        } else {
-            startCoinRotation(coins, true);
+        console.log(currentPlayer.color, " coins movement not possible")
+        currentPlayer.score = 0;
+        setTimeout(function () {
+            nextPlayerTurn()
+        }, secondsToWaitForAnotherChance * 1000)
+        return;
+    }
+    // single coin auto movement, this needs to be fixed later
+    else if (coinsThatCanMove.length == 1) {
+        {
+            const coinPositionId = getCoinCurrentPosition(coinsThatCanMove[0]);
+            document.getElementById(coinPositionId).click();
         }
+    } else {
+        startCoinRotation(coins, coinsThatCanMove);
     }
 }
 
@@ -324,18 +335,19 @@ function nextPlayerTurn() {
         setBlink();
         return;
     }
-
-    const playersLength = players.length;
-    const currentPlayerIndex = players.findIndex(player => player.inputId == currentPlayer.inputId);
+    let _players = [...players];
+    _players = _players.filter(player => player.rank == null);
+    const playersLength = _players.length;
+    const currentPlayerIndex = _players.findIndex(player => player.inputId == currentPlayer.inputId);
     if (currentPlayerIndex == -1) {
         fixError()
         return;
     }
 
     if (currentPlayerIndex < playersLength - 1) {
-        currentPlayer = players[currentPlayerIndex + 1];
+        currentPlayer = _players[currentPlayerIndex + 1];
     } else {
-        currentPlayer = players[0];
+        currentPlayer = _players[0];
     }
     setBlink();
 }
@@ -630,6 +642,7 @@ async function executeCoinMovement(coinId) {
         const numberOfTraverse = score;
         await moveCoin(coinId, numberOfTraverse, true, score);
     } else {
+        console.log("here error 1")
         fixError()
         return;
     }
@@ -669,14 +682,15 @@ function stopCoinRotation() {
 }
 
 // function to start current coin rotation
-function startCoinRotation(coins, rotateOutsideCoinsOnly = false) {
+function startCoinRotation(coins, rotateCoins = []) {
     stopFingerBlinking();
     const allCoins = document.querySelectorAll(`.${coins}`);
-    if (rotateOutsideCoinsOnly) {
-        for (let i = 0; i < 4; i++) {
-            const coinId = `${coins}-${parseInt(i + 1)}`;
-            if (currentPlayer.coin_out.includes(coinId)) {
-                const coinPositionId = currentPlayer.coin_position[coinId];
+    if (rotateCoins.length > 0) {
+        for (let coinId of rotateCoins) {
+            const coinPositionId = currentPlayer.coin_position[coinId];
+            if (coinPositionId == null) {
+                document.getElementById(coinId).classList.add('coin-rotate');
+            } else {
                 document.getElementById(coinPositionId).classList.add('coin-rotate');
             }
         }
@@ -856,7 +870,7 @@ async function drawCoin(coinId, pathBlockId, isForward, isLastMovement, score, n
 
         //get same pathBlockCount
         const count = isSameColorOccupiesSamePathBlock(coinId, coinPosition);
-        const countN = isSameColorOccupiesSamePathBlock(coinId, pathBlock);
+        const countN = isSameColorOccupiesSamePathBlock(coinId, pathBlockId);
         if (count > 0 || countN > 0) {
             coinElement.classList.add(colorClass);
         }
@@ -896,6 +910,8 @@ async function drawCoin(coinId, pathBlockId, isForward, isLastMovement, score, n
         const div = document.createElement("div");
         div.classList = `${color}-coins`;
         document.getElementById(`hch-${color}`).appendChild(div);
+        //if coin is home, then current player will roll the dice again
+        playerWhoseChanceShouldBeRepeated = currentPlayer;
         isGameCompleted();
     } else if (isHome == -1) {
         const player = players.find(player => player.color == color);
@@ -922,7 +938,7 @@ async function drawCoin(coinId, pathBlockId, isForward, isLastMovement, score, n
         if (isCoinCutAllowedBool) {
             //path block is occupied by another coin, cut it
             // if (isCoinCut == 0) {
-            playerWhoseIsCuttingAnother = players.find(player => player.color == color);
+            playerWhoseChanceShouldBeRepeated = players.find(player => player.color == color);
             // isCoinCut = 1
             await toCutCoins(otherCoinId, coinId);
             // isCoinCut = 0;
@@ -937,9 +953,9 @@ async function drawCoin(coinId, pathBlockId, isForward, isLastMovement, score, n
                 startFingerBlinking();
             }
         } else {
-            if (playerWhoseIsCuttingAnother != null) {
-                currentPlayer = playerWhoseIsCuttingAnother;
-                playerWhoseIsCuttingAnother = null;
+            if (playerWhoseChanceShouldBeRepeated != null) {
+                currentPlayer = playerWhoseChanceShouldBeRepeated;
+                playerWhoseChanceShouldBeRepeated = null;
             }
             setBlink();
         }
@@ -1054,13 +1070,13 @@ function isGameCompleted() {
     let completed = false;
 
     for (let player of players) {
-        if (player.rank != null && player.coin_home.length == 4) {
+        if (player.rank == null && player.coin_home.length == 4) {
             const maxAvailableRank = findNextRank();
             player.rank = maxAvailableRank;
             numOfPlayerWhoseGameIsCompleted++;
         }
 
-        if (numOfPlayerWhoseGameIsCompleted >= 3) {
+        if (numOfPlayerWhoseGameIsCompleted >= players.length - 1) {
             completed = true
             break
         }
@@ -1097,4 +1113,35 @@ function getUniqueArray(arr) {
     return Array.from(new Set(arr));
 }
 
+//function to calculate how many coins can actually move
+function findCoinsThatCanMove() {
+    let coins = [];
+    const color = currentPlayer.color;
+    const coin_position = currentPlayer.coin_position;
+    let numberOfTraverse = currentPlayer.score;
+    if (numberOfTraverse == diceVal.six) {
+        coins = [...currentPlayer.coin_in];
+    }
+
+    for (let coinId in coin_position) {
+        if (coin_position[coinId] != null) {
+            const currentPositionId = getCoinCurrentPosition(coinId);
+            if (typeof currentPositionId == "undefined") {
+                continue
+            }
+            const maxForwardPathTraverseValue = pathToTraverse[color].length + 1;
+            if (currentPositionId == coinId) {
+                if (numberOfTraverse < maxForwardPathTraverseValue) {
+                    coins.push(coinId);
+                }
+            } else {
+                const currentPositionIndex = pathToTraverse[color].findIndex(elem => elem == currentPositionId);
+                if (numberOfTraverse < maxForwardPathTraverseValue - currentPositionIndex) {
+                    coins.push(coinId);
+                }
+            }
+        }
+    }
+    return coins;
+}
 
